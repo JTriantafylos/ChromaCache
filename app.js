@@ -14,6 +14,7 @@ class Color
 // Array to store every color object array for each image
 // matching the given label
 var colorObjDatabase = [];
+var imageUrlList = [];
 
 // Asynchronous function that returns an array of JSON dominant colors
 async function paletteSearch(imageUrl)
@@ -152,8 +153,9 @@ async function findAveragePalette(imageUrlList)
 
 function populateImageUrlArray(searchWord)
 {
-    var imageUrlList = [];
     /*
+    var imageUrlList = [];
+
     const api_key = "aizasyc37-yn0mhrqarsedjbyc3haanmuknnibw";
     const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
     const keyword = "dog";
@@ -170,50 +172,48 @@ function populateImageUrlArray(searchWord)
     const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
     const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
     var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + searchWord + "&searchType=image";
- 
+
     const fs = require('fs');
-    fs.writeFile('websites.txt', "", (err) => {  
+    fs.writeFile('websites.txt', "", (err) => {
         if (err) throw err;
-        console.log('');
     });
     //send srchRequest to parse_json.py and get an array of strings
     //console.log(srchRequest);
     let options = {
         mode: 'text',
-        pythonPath: 'C:/Users/eyasv/AppData/Local/Programs/Python/Python37-32/python.exe',
+        pythonPath: '/usr/bin/python3.6',
         pythonOptions: ['-u'], // get print results in real-time
         scriptPath: '',
         args: [srchRequest]
     };
-   
+
     PythonShell.run('parse_json.py', options, function (err, results) {
         if (err) throw err;
         // results is an array consisting of messages collected during execution
         //console.log(results[0]);
-     
+
         let temp_urls = ""
         var temp_url =""
         var quote = false;
         //turn into an array
         //console.log(results[0]);
-    
+
         var i;
         for(i =0; i< results[0].length;i++){
-        if(results[0].charAt(i) == ','){
+        if(results[0].charAt(i) == '|'){
             temp_urls += temp_url + ",";
             const fs = require('fs');
-            fs.appendFile('websites.txt', temp_url + "\n", (err) => {  
+            fs.appendFile('websites.txt', temp_url + "\n", (err) => {
                 if (err) throw err;
-                
             });
             temp_url = ""
         }else{
             temp_url += results[0].charAt(i);
-    
+
         }
         }
 
-        
+
     });
 
 
@@ -258,7 +258,7 @@ app.post("/api/url", function(req,res)
         var search = {};
         search.value = req.body.value;
 
-        //imageUrlList = populateImageUrlArray(search.value);
+        imageUrlList = populateImageUrlArray(search.value);
         var fs = require('fs');
         var es = require('event-stream');
 
@@ -271,6 +271,7 @@ app.post("/api/url", function(req,res)
                 s.pause();
                 lines.push(line);
                 s.resume();
+                console.log(line);
             })
             .on('error', function(err) {
                 console.log('Error:', err);
@@ -280,6 +281,8 @@ app.post("/api/url", function(req,res)
                 console.log(lines);
             })
         );
+
+        console.log(lines);
 
         imageUrlList = lines;
 
