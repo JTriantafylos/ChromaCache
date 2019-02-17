@@ -151,22 +151,41 @@ async function findAveragePalette(imageUrlList)
 
 function populateImageUrlArray(searchWord)
 {
-    /*
     var imageUrlList = [];
+    var itemList;
 
-    const api_key = "aizasyc37-yn0mhrqarsedjbyc3haanmuknnibw";
+    const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
     const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
-    const keyword = "dog";
+    const keyword = searchWord;
     var srchrequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + keyword + "&searchtype=image";
 
     const request = require('request');
 
     request(srchrequest, { json: true }, (err, res, body) => {
-    if (err) { return console.log(err); }
-    console.log(body.items);
-    var itemList = body.items;
+        if(err)
+        {
+            return console.log(err);
+        }
+
+        var waitUntil = require('wait-until');
+
+        waitUntil(3000, 7, function condition() {
+            return body.items !== undefined;
+        }, function done(result) {
+            itemList = body.items;
+
+            var i;
+            for(i = 0; i < itemList.length; i++)
+            {
+                console.log(itemList[i].link)
+                imageUrlList.push(itemList[i].link);
+            }
+
+            return imageUrlList;
+        ;});
+
+
     });
-    */
 }
 
 // Drops root after being started since the app is being run on port 80
@@ -208,7 +227,8 @@ app.post("/api/url", function(req,res)
         var search = {};
         search.value = req.body.value;
 
-        imageUrlList = populateImageUrlArray(search.value);
+        //imageUrlList = populateImageUrlArray(search.value);
+        populateImageUrlArray(search.value);
 
         findAveragePalette(imageUrlList);
 
