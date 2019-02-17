@@ -1,3 +1,5 @@
+// Version created for rewrite of ChromaCache
+
 'use strict';
 let {PythonShell} = require('./node_modules/python-shell/index')
 
