@@ -216,11 +216,7 @@ function populateImageUrlArray(searchWord)
         
     });
 
-    
 
-
-
-    return imageUrlList;
 }
 
 // Drops root after being started since the app is being run on port 80
