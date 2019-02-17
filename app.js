@@ -1,3 +1,6 @@
+'use strict';
+let {PythonShell} = require('./node_modules/python-shell/index')
+
 class Color
 {
     constructor(red, green, blue)
@@ -65,7 +68,7 @@ function createAveragePalette(colorDatabase)
 {
     // Variable to hold the average palette of color objects
     // returned by this function
-    var averagePalette = [];
+    averagePalette = [];
 
 
     // Variables to store the total number of colors in each color
@@ -154,10 +157,10 @@ function populateImageUrlArray(searchWord)
     const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
     const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
     var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + searchWord + "&searchType=image";
- 
+
     let options = {
         mode: 'text',
-        pythonPath: 'C:/Users/eyasv/AppData/Local/Programs/Python/Python37-32/python.exe',
+        pythonPath: '/usr/bin/python3.6',
         pythonOptions: ['-u'], // get print results in real-time
         scriptPath: '',
         args: [srchRequest]
@@ -171,21 +174,21 @@ function populateImageUrlArray(searchWord)
       var temp_url =""
       var quote = false;
       //turn into an array
-      
-      var i;
-      for(i =0; i< results[0].length;i++){
+
+    var i;
+    for(i =0; i< results[0].length;i++){
         if(results[0].charAt(i) == '|'){
             temp_urls.push(temp_url);
-            
+
 
             temp_url = ""
         }else{
             temp_url += results[0].charAt(i);
-    
+
         }
-      }
-      //console.log(temp_urls);
-      return temp_urls;
+    }
+    //console.log(temp_urls);
+    return temp_urls;
       });
       //console.log(output);
       return (output)
@@ -225,26 +228,34 @@ app.get("/",function(req,res)
         res.sendFile(path + "index.html");
     });
 
+app.get("/about.html",function(req,res)
+    {
+        res.sendFile(path + "about.html");
+    });
+
 app.post("/api/url", function(req,res)
     {
         var search = {};
         search.value = req.body.value;
 
-        imageUrlList = populateImageUrlArray(search.value)._endCallback();
+        colorObjDatabase = [];
+        imageUrlList = [];
+        averagePalette = undefined;
+
+        imageUrlList = populateImageUrlArray(search.value);
 
         var waitUntil = require('wait-until');
 
         waitUntil(3000, 7, function condition() {
-            return imageUrlList.length !== 0;
+            return imageUrlList._endCallback() !== undefined;
         }, function done(result) {
-
-            findAveragePalette(imageUrlList);  
+            findAveragePalette(imageUrlList._endCallback());
             return res.send(search);
         ;});
 
-        
 
-        
+
+
     });
 
 app.get("/api/palette", function(req,res)
