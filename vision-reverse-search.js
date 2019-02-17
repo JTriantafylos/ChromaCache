@@ -38,9 +38,11 @@ async function paletteSearch(imagePath){
 
 //paletteSearch('./resources/solid-red-test.jpg').catch(console.error);
 
-async function googlePalatte(){
-  
+async function get_palette_Link(keyword){
 
-
+  const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
+  const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
+  var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + keyword + "&searchType=image";
+  return(srchRequest)
 }
-googlePalatte(); 
+googlePalatte("dog"); 
