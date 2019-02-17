@@ -30,7 +30,7 @@ async function paletteSearch(imageUrl)
 
     // Performs dominant color detection on the image file
     const [result] = await client.imageProperties(imageUrl);
-    const colors = result.imagePropertiesAnnotation.dominantColors.colors;
+    const colors = await result.imagePropertiesAnnotation.dominantColors.colors;
 
     return colors;
 }
