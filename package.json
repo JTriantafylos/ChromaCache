@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-express-jquery-ajax-bootstrap",
+  "version": "1.0.0",
+  "description": "Integrate NodeJS Express with JQuery Ajax Post/Get requests and Bootstrap view",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeJs",
+    "Express",
+    "Bootstrap",
+    "Jquery",
+    "Ajax"
+  ],
+  "author": "JavaSampleApproach.com",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

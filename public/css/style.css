@@ -1,0 +1,121 @@
+body
+{
+    background-color: #87B6A7;
+}
+
+nav
+{
+    font-family: 'Raleway', sans-serif;
+    padding: 0px;
+}
+
+h1
+{
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 2px 2px 3px #555555;
+}
+
+.row
+{
+    margin-top: 6%;
+    margin-bottom: 6%;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.btn
+{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.paletteElement
+{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.paletteElement:hover
+{
+    cursor: pointer;
+}
+
+#searchID
+{
+    margin-top: 32px;
+    margin-bottom: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    border-radius: 12px;
+
+    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+#loadingMessage
+{
+    -webkit-animation: breathing 4s ease-out infinite normal;
+    animation: breathing 4s ease-out infinite normal;
+    -webkit-font-smoothing: antialiased;
+}
+
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+/*
+#searchSubmitID, #searchSubmitID:active, #searchSubmitID:focus
+{
+    background-color: #62C370;
+    border-color: #62C370;
+}
+
+#resultPalette
+{
+    width: 100%;
+
+    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+}
+*/
