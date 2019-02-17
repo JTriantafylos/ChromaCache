@@ -75,7 +75,7 @@ async function populateImageUrlArray(searchWord)
         args: [srchRequest]
     };
    
-    r = PythonShell.run('parse_json.py', options, function (err, results) {
+    PythonShell.run('parse_json.py', options, function (err, results) {
         if (err) throw err;
         // results is an array consisting of messages collected during execution
         //console.log(results[0]);
@@ -101,45 +101,34 @@ async function populateImageUrlArray(searchWord)
     
         }
         }
-        return(temp_urls)
+        //console.log(temp_urls);
         
     });
 
     
 
-    return r;
+   
     
 }
 
-//var r = populateImageUrlArray("dog"); 
-//console.log(r)
+//populateImageUrlArray("apple"); 
 
-var r = function() {
+
+function readFile(){
+  var lines = []
   var fs = require('fs');
-  var es = require('event-stream');
+  var letters = ""
+  var read = fs.readFileSync('websites.txt', 'utf8')
+  var i;
+  for(i = 0; i<read.length;i++){
+    if(read.charAt(i) == '\n'){
+      lines.push(letters);
+      letters = "";
+    }else{
+      letters += read.charAt(i);
+    }
+  }
+  console.log(lines);
+}
 
-  var lines = [];
-
-  var s = fs.createReadStream('websites.txt')
-      .pipe(es.split())
-      .pipe(es.mapSync(function(line) {
-          //pause the readstream
-          s.pause();
-          lines.push(line);
-          s.resume();
-      })
-      .on('error', function(err) {
-          console.log('Error:', err);
-      })
-      .on('end', function() {
-          //console.log('Finish reading.');
-          console.log(lines);
-      })
-  );
-  return(lines);
-
-
-};
-
-
-console.log(r);
+readFile();

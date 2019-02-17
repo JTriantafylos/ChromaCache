@@ -40,7 +40,11 @@ class Parse_Json:
 
                 if(i != ']' and i != '[' and i !='\"' and i != '\'' and i != ' ' and i != '\\'):
                     temp_url += i
+<<<<<<< HEAD
+            
+=======
 
+>>>>>>> 5a0a4986d13ea4a2a5a46b07fca406d0a44b6e4d
             urls += temp_url + "|"
             temp_url = ""
 

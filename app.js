@@ -162,9 +162,61 @@ function populateImageUrlArray(searchWord)
     const request = require('request');
 
     request(srchrequest, { json: true }, (err, res, body) => {
+<<<<<<< HEAD
+    if (err) { return console.log(err); }
+    console.log(body.items);
+    });
+    */
+
+    const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
+    const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
+    var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + searchWord + "&searchType=image";
+ 
+    const fs = require('fs');
+    fs.writeFile('websites.txt', "", (err) => {  
+        if (err) throw err;
+        console.log('');
+    });
+    //send srchRequest to parse_json.py and get an array of strings
+    //console.log(srchRequest);
+    let options = {
+        mode: 'text',
+        pythonPath: 'C:/Users/eyasv/AppData/Local/Programs/Python/Python37-32/python.exe',
+        pythonOptions: ['-u'], // get print results in real-time
+        scriptPath: '',
+        args: [srchRequest]
+    };
+   
+    PythonShell.run('parse_json.py', options, function (err, results) {
+        if (err) throw err;
+        // results is an array consisting of messages collected during execution
+        //console.log(results[0]);
+     
+        let temp_urls = ""
+        var temp_url =""
+        var quote = false;
+        //turn into an array
+        //console.log(results[0]);
+    
+        var i;
+        for(i =0; i< results[0].length;i++){
+        if(results[0].charAt(i) == '|'){
+            temp_urls += temp_url + ",";
+            const fs = require('fs');
+            fs.appendFile('websites.txt', temp_url + "\n", (err) => {  
+                if (err) throw err;
+                
+            });
+            temp_url = ""
+        }else{
+            temp_url += results[0].charAt(i);
+    
+        }
+=======
         if(err)
         {
             return console.log(err);
+>>>>>>> 5a0a4986d13ea4a2a5a46b07fca406d0a44b6e4d
         }
 
         var waitUntil = require('wait-until');
@@ -227,8 +279,27 @@ app.post("/api/url", function(req,res)
         var search = {};
         search.value = req.body.value;
 
+<<<<<<< HEAD
+        imageUrlList = populateImageUrlArray(search.value);
+        var lines = []
+        var fs = require('fs');
+        var letters = ""
+        var read = fs.readFileSync('websites.txt', 'utf8')
+        var i;
+        for(i = 0; i<read.length;i++){
+          if(read.charAt(i) == '\n'){
+            lines.push(letters);
+            letters = "";
+          }else{
+            letters += read.charAt(i);
+          }
+        }
+
+        imageUrlList = lines;
+=======
         //imageUrlList = populateImageUrlArray(search.value);
         populateImageUrlArray(search.value);
+>>>>>>> 5a0a4986d13ea4a2a5a46b07fca406d0a44b6e4d
 
         findAveragePalette(imageUrlList);
 
