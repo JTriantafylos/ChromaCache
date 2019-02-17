@@ -39,60 +39,107 @@ async function paletteSearch(imagePath){
 
 //paletteSearch('./resources/solid-red-test.jpg').catch(console.error);
 
-async function get_palette_Link(keyword){
-  
-  const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
-  const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
-  var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + keyword + "&searchType=image";
+async function populateImageUrlArray(searchWord)
+{
+    var imageUrlList = [];
+    /*
+    const api_key = "aizasyc37-yn0mhrqarsedjbyc3haanmuknnibw";
+    const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
+    const keyword = "dog";
+    var srchrequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + keyword + "&searchtype=image";
 
-  const fs = require('fs');
-  fs.writeFile('websites.txt', "", (err) => {  
-    if (err) throw err;
-      console.log('');
-  });
-  //send srchRequest to parse_json.py and get an array of strings
-  //console.log(srchRequest);
-  let options = {
-    mode: 'text',
-    pythonPath: 'C:/Users/eyasv/AppData/Local/Programs/Python/Python37-32/python.exe',
-    pythonOptions: ['-u'], // get print results in real-time
-    scriptPath: '',
-    args: [srchRequest]
-  };
-  
-  PythonShell.run('parse_json.py', options, function (err, results) {
-    if (err) throw err;
-    // results is an array consisting of messages collected during execution
-    //console.log(results[0]);
-    
-    let temp_urls = ""
-    var temp_url =""
-    var quote = false;
-    //turn into an array
-    //console.log(results[0]);
-  
-    var i;
-    for(i =0; i< results[0].length;i++){
-      if(results[0].charAt(i) == ','){
-        temp_urls += temp_url + ",";
-        const fs = require('fs');
-        fs.appendFile('websites.txt', temp_url + "\n", (err) => {  
-            if (err) throw err;
-            
-        });
-        temp_url = ""
-      }else{
-        temp_url += results[0].charAt(i);
+    const request = require('request');
 
-      }
-    }
-  
-    return(temp_urls)
+    request(srchrequest, { json: true }, (err, res, body) => {
+    if (err) { return console.log(err); }
+    console.log(body.items);
+    });
+    */
+
+    const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
+    const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
+    var srchRequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + searchWord + "&searchType=image";
+ 
+    const fs = require('fs');
+    fs.writeFile('websites.txt', "", (err) => {  
+        if (err) throw err;
+        console.log('');
+    });
+    //send srchRequest to parse_json.py and get an array of strings
+    //console.log(srchRequest);
+    let options = {
+        mode: 'text',
+        pythonPath: 'C:/Users/eyasv/AppData/Local/Programs/Python/Python37-32/python.exe',
+        pythonOptions: ['-u'], // get print results in real-time
+        scriptPath: '',
+        args: [srchRequest]
+    };
+   
+    r = PythonShell.run('parse_json.py', options, function (err, results) {
+        if (err) throw err;
+        // results is an array consisting of messages collected during execution
+        //console.log(results[0]);
+     
+        let temp_urls = []
+        var temp_url =""
+        var quote = false;
+        //turn into an array
+        //console.log(results[0]);
     
-  });
-  // return the array of strings
-  
+        var i;
+        for(i =0; i< results[0].length;i++){
+        if(results[0].charAt(i) == ','){
+            temp_urls.push(temp_url);
+            const fs = require('fs');
+            fs.appendFile('websites.txt', temp_url + "\n", (err) => {  
+                if (err) throw err;
+                
+            });
+            temp_url = ""
+        }else{
+            temp_url += results[0].charAt(i);
+    
+        }
+        }
+        return(temp_urls)
+        
+    });
+
+    
+
+    return r;
+    
 }
 
-var r = get_palette_Link("dog"); 
-console.log(r)
+//var r = populateImageUrlArray("dog"); 
+//console.log(r)
+
+var r = function() {
+  var fs = require('fs');
+  var es = require('event-stream');
+
+  var lines = [];
+
+  var s = fs.createReadStream('websites.txt')
+      .pipe(es.split())
+      .pipe(es.mapSync(function(line) {
+          //pause the readstream
+          s.pause();
+          lines.push(line);
+          s.resume();
+      })
+      .on('error', function(err) {
+          console.log('Error:', err);
+      })
+      .on('end', function() {
+          //console.log('Finish reading.');
+          console.log(lines);
+      })
+  );
+  return(lines);
+
+
+};
+
+
+console.log(r);
