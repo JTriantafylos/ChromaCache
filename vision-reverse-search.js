@@ -41,20 +41,6 @@ async function paletteSearch(imagePath){
 
 async function populateImageUrlArray(searchWord)
 {
-    var imageUrlList = [];
-    /*
-    const api_key = "aizasyc37-yn0mhrqarsedjbyc3haanmuknnibw";
-    const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
-    const keyword = "dog";
-    var srchrequest = "https://www.googleapis.com/customsearch/v1?key=" + api_key + "&cx=" + srch_eng_id + "&q=" + keyword + "&searchtype=image";
-
-    const request = require('request');
-
-    request(srchrequest, { json: true }, (err, res, body) => {
-    if (err) { return console.log(err); }
-    console.log(body.items);
-    });
-    */
 
     const api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw";
     const srch_eng_id = "012928527837730696752:wzqnawdyxwc";
@@ -111,7 +97,7 @@ async function populateImageUrlArray(searchWord)
     
 }
 
-//populateImageUrlArray("apple"); 
+populateImageUrlArray("carrot"); 
 
 
 function readFile(){
