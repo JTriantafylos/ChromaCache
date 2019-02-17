@@ -1,6 +1,5 @@
 'use strict';
 
-// [START vision_quickstart]
 async function tagSearch(imagePath) {
   // Imports the Google Cloud client library
   const vision = require('@google-cloud/vision');
@@ -15,12 +14,8 @@ async function tagSearch(imagePath) {
   console.log('Labels:');
   labels.forEach(label => console.log(label.description));
 }
-// [END vision_quickstart]
 
 //tagSearch('./resources/tree.jpg').catch(console.error);
-
-
-
 
 
 async function paletteSearch(imagePath){
@@ -43,7 +38,9 @@ async function paletteSearch(imagePath){
 
 //paletteSearch('./resources/solid-red-test.jpg').catch(console.error);
 
-async function googlePalatte(keyword){
+async function googlePalatte(){
   
 
+
 }
+googlePalatte(); 
