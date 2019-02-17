@@ -1,9 +1,12 @@
 import urllib.request as urllib2
-#r = Parse_Json("https://www.googleapis.com/customsearch/v1?key=AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw&cx=012928527837730696752:wzqnawdyxwc&q=dog&searchType=image") 
+import sys
+import re
 
 class Parse_Json:
     def __init__(self, rawHTML):
-        self.rawHTML = rawHTML
+        
+
+        self.rawHTML=(rawHTML)
         main(self)
 
     def fetch_html(self):
@@ -14,7 +17,8 @@ class Parse_Json:
         response = urllib2.urlopen(rawHTML)
         parsed_html = response.read()
         
-        urls = []
+        temp_urls = []
+        urls = ""
         counter = 0
         for x in parsed_html:
             if(x == 34):
@@ -26,11 +30,21 @@ class Parse_Json:
                     temp_counter +=1
                 
                 if(target == temp_comparator):
-                    print(temp_comparator)
                     url = self.fetch_link(counter+9, parsed_html)
-                    urls.append(url)
+                    temp_urls.append(url)
             counter+=1
         
+        temp_url =""
+        for t in temp_urls:
+            for i in t:
+                
+                if(i != ']' and i != '[' and i !='\"' and i != '\'' and i != ' ' and i != '\\'):
+                    temp_url += i
+            
+            urls += temp_url + ","
+            temp_url = ""
+        
+
         return(urls)
 
         
@@ -49,3 +63,7 @@ class Parse_Json:
 
 def main(self):
     print(self.fetch_html())
+
+    
+for v in sys.argv[1:]:
+    pj = Parse_Json(v)

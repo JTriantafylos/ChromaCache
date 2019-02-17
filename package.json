@@ -4,7 +4,8 @@
   "description": "keywords to color palette",
   "main": "ColorPalette.js",
   "dependencies": {
-    "python-shell": "^1.0.7"
+    "python-shell": "^1.0.7",
+    "typescript-map": "0.0.7"
   },
   "devDependencies": {},
   "scripts": {
