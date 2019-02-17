@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "nodejs-express-jquery-ajax-bootstrap",
   "version": "1.0.0",
   "description": "Integrate NodeJS Express with JQuery Ajax Post/Get requests and Bootstrap view",
@@ -18,4 +19,27 @@
   "dependencies": {
     "express": "^4.16.4"
   }
+=======
+  "name": "chromacache",
+  "version": "1.0.0",
+  "description": "keywords to color palette",
+  "main": "ColorPalette.js",
+  "dependencies": {
+    "python-shell": "^1.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JTriantafylos/ChromaCache"
+  },
+  "author": "Eyas Valdez and James Triantafylos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JTriantafylos/ChromaCache/issues"
+  },
+  "homepage": "https://github.com/JTriantafylos/ChromaCache#readme"
+>>>>>>> 00fb873ce07ff92339240794779ff65f9b573668
 }
