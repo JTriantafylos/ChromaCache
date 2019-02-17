@@ -27,14 +27,14 @@ class Parse_Json:
                 
                 if(target == temp_comparator):
                     print(temp_comparator)
-                    url = self.fetch_links(counter+9, parsed_html)
+                    url = self.fetch_link(counter+9, parsed_html)
                     urls.append(url)
             counter+=1
         
         return(urls)
 
         
-    def fetch_links(self,index, parsed_html):
+    def fetch_link(self,index, parsed_html):
         counter = index
         temp_url = []
         url_string = ""
