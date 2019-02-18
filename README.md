@@ -19,4 +19,7 @@ See us at [ChromaCache](chromacache.com)!
 - typescript
 - typescript-map
 
+- [ ] Update README.md
+- [ ] Implement Google Images web scraping
+
  Created **James Triantafylos (@JTriantafylos)** & **Eyas Valdez (@SpiltBeans)**.
