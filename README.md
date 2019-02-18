@@ -19,6 +19,7 @@ See us at [ChromaCache](chromacache.com)!
 - typescript
 - typescript-map
 
+**To-Do:**
 - [ ] Update README.md
 - [ ] Implement Google Images web scraping
 
