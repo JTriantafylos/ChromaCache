@@ -3,6 +3,7 @@ module.exports =
 	"env": 
 	{
 		"browser": true,
+		"jquery": true,
 		"commonjs": true,
 		"es6": true,
 		"node": true
@@ -43,6 +44,11 @@ module.exports =
 		[
 			"error",
 			"allman"
+		],
+		"no-console":
+		[
+			"warn", 
+			{ allow: ["warn", "error"] }
 		]
 	}
 };
