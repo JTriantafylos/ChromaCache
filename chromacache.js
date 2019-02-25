@@ -76,5 +76,17 @@ webServerApp.post("/api/clientMessage", function (req, res)
 
     console.log(req.body);
 
-    return res.send(req.body);
+    const fetch = require("node-fetch");
+
+    var srchRequest = "https://www.googleapis.com/customsearch/v1?key=AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw&cx=012928527837730696752:wzqnawdyxwc&q=" + req.body.value + "&searchType=image";
+    return (fetch(srchRequest)
+        .then(res => res.json())
+        .then(function(json) 
+        {
+            return res.send(json);
+        }).catch(function (error) 
+        {
+            console.log("Error: ", error);
+        })
+    );
 });

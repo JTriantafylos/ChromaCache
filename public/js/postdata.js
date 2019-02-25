@@ -19,7 +19,7 @@ $( document ).ready(function()
     {
 
         // PREPARE FORM DATA
-        var formData = {value : "Hello World!"};
+        var formData = {value: $("#searchID").val()};
 
         // DO POST
         $.ajax(
@@ -29,19 +29,13 @@ $( document ).ready(function()
                 url : window.location + "api/clientMessage",
                 data : JSON.stringify(formData),
                 dataType : "json",
-                success : function() 
+                success : function(response) 
                 {
-                    /*
-                        $("#postResultDiv").html("<p>" +
-                            "Post Successfully! <br>" +
-                            "--->" + JSON.stringify(formData.value)+ "</p>");
-                        */
-                    console.log(JSON.stringify(formData.value));
+                    console.log(JSON.stringify(response));
                 },
                 error : function(error) 
                 {
                     console.error("Error: ", error);
-                    console.log(JSON.stringify(formData.value));
                     console.error("Attempt to send AJAX POST failed!");
                 }
             });
