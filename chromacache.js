@@ -14,6 +14,11 @@ function createWebServer()
     // and/or used by .html files
     webServerApp.use(webServerExpress.static("public"));
 
+    // Creates a body parser object to allow the web server to parse
+    // the body of a POST request
+    var bodyParser = require("body-parser");
+    webServerApp.use(bodyParser.json());
+
     // Serves index.html whenever the root of the 
     // webserver is requested (i.e. localhost)
     webServerApp.get("/", function(req, res)

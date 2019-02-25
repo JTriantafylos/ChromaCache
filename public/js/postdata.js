@@ -41,6 +41,7 @@ $( document ).ready(function()
                 error : function(error) 
                 {
                     console.error("Error: ", error);
+                    console.log(JSON.stringify(formData.value));
                     console.error("Attempt to send AJAX POST failed!");
                 }
             });
