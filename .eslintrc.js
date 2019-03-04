@@ -33,7 +33,7 @@ module.exports =
 		"quotes": 
 		[
 			"error",
-			"double"
+			"single"
 		],
 		"semi": 
 		[
@@ -43,7 +43,7 @@ module.exports =
 		"brace-style":
 		[
 			"error",
-			"allman"
+			"1tbs"
 		],
 		"no-console":
 		[
