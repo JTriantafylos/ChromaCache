@@ -4,14 +4,14 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-    fetchColor:function(keyword, api_key, srch_eng_id){
+    fetchImageLinks:function(keyword, api_key, srch_eng_id){
                 
         var srchRequest = 'https://www.googleapis.com/customsearch/v1?key=' + api_key + '&cx=' + srch_eng_id + '&q=' + keyword + '&searchType=image';
                 
         var collect = fetch(srchRequest);
         return collect;
                         
-                        
+         
     }
 };
         

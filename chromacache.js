@@ -73,7 +73,7 @@ try {
 webServerApp.post('/api/clientMessage', function (req, res) {
     //var message = req.body.value;
 
-    let collector = colorLib.fetchColor(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+    let collector = colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
     
     Promise.all([collector])
         .then(files =>{
