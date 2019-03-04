@@ -74,19 +74,37 @@ webServerApp.post("/api/clientMessage", function (req, res)
 {
     //var message = req.body.value;
 
-    console.log(req.body);
+    
 
-    const fetch = require("node-fetch");
+    const cg = require('./colourlib');
 
-    var srchRequest = "https://www.googleapis.com/customsearch/v1?key=AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw&cx=012928527837730696752:wzqnawdyxwc&q=" + req.body.value + "&searchType=image";
-    return (fetch(srchRequest)
-        .then(res => res.json())
-        .then(function(json) 
-        {
-            return res.send(json);
-        }).catch(function (error) 
-        {
-            console.log("Error: ", error);
-        })
-    );
+    let collector = cg.fetchColour(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+    Promise.all([collector])
+    .then(files =>{
+            files.forEach(file=>{
+                    process(file.json());
+                            
+            
+            })
+    })
+    .catch(err=>{
+            
+    });
+            
+    let process= (prom)=>{
+            prom.then(data=>{
+                            
+                    items = data.items;
+                    itemsLength = items.length;
+                    URLS = [];
+                    var i;
+                    for(i = 0; i <itemsLength; i ++){
+                            URLS.push(items[i].link);
+                    }
+                    //DO STUFF WITH URLS
+                    console.log(URLS);
+                            
+            })
+    }
+       
 });
