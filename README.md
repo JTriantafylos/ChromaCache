@@ -22,7 +22,7 @@ See us at [ChromaCache](chromacache.com)!
 **To-Do:**
 - [ ] Update README.md
 - [ ] Implement Google Images web scraping
-- [ ] Create a image scraping library
+- [x] Create a image scraping library
 - [ ] Create a colour palette database
 - [ ] Implement libraries and database
 - [ ] Create a frequency handler in database
