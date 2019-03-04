@@ -79,6 +79,7 @@ webServerApp.post("/api/clientMessage", function (req, res)
     const cg = require('./colourlib');
 
     let collector = cg.fetchColour(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+    
     Promise.all([collector])
     .then(files =>{
             files.forEach(file=>{
