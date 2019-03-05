@@ -9,6 +9,7 @@ module.exports = {
         var srchRequest = 'https://www.googleapis.com/customsearch/v1?key=' + api_key + '&cx=' + srch_eng_id + '&q=' + keyword + '&searchType=image';
                 
         var collect = fetch(srchRequest);
+        
         return collect;
                         
          
