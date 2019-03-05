@@ -73,34 +73,6 @@ try {
 webServerApp.post('/api/clientMessage', function (req, res) {
     //var message = req.body.value;
 
-    let collector = colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
-    
-    Promise.all([collector])
-        .then(files =>{
-            files.forEach(file=>{
-                process(file.json());
-                            
-            
-            });
-        })
-        .catch(err=>{
-            console.log('Error: ' + err);
-        });
-            
-    let process= (prom)=>{
-        prom.then(data=>{
-                            
-            items = data.items;
-            itemsLength = items.length;
-            URLS = [];
-            var i;
-            for(i = 0; i <itemsLength; i ++){
-                URLS.push(items[i].link);
-            }
-            //DO STUFF WITH URLS
-            console.log(URLS);
-                            
-        });
-    };
+    console.log(colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc'));
        
 });
