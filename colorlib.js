@@ -17,25 +17,25 @@ class Color{
     //constructor for color
     constructor( r, g, b){
             
-            this.red = r;
-            this.green = g;
-            this.blue = b;
+        this.red = r;
+        this.green = g;
+        this.blue = b;
 
     }
 
     //basic getter and setters
     getRGB(){
 
-            var col = {'red': this.red, 'green': this.green, 'blue':this.blue};
-            return col;
+        var col = {'red': this.red, 'green': this.green, 'blue':this.blue};
+        return col;
     }
 
 
     
     //a string conversion for testing purposes 
     toString(){
-            var outp = 'The RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
-            return outp;
+        var outp = 'The RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
+        return outp;
     }
 
 
@@ -46,8 +46,8 @@ class Palette{
 
     //constructor for palette
     constructor(keyword, colors){
-            this.keyword = keyword;
-            this.colors = colors;
+        this.keyword = keyword;
+        this.colors = colors;
             
 
     }
@@ -71,11 +71,11 @@ class Palette{
 
     //a string conversion for testing purposes
     toString(){
-            var outp = this.getKeyword() + '\n';
-            this.colors.forEach(function(col){
-                    outp += col.toString() +'\n';
-            });
-            return outp;
+        var outp = this.getKeyword() + '\n';
+        this.colors.forEach(function(col){
+            outp += col.toString() +'\n';
+        });
+        return outp;
             
     }
 }
@@ -108,12 +108,12 @@ module.exports = {
                 //got json, now splitting into separate URL's
                 
                 //splitting json into elements
-                items = json.items;
-                itemsLength = items.length;
+                var items = json.items;
+                var itemsLength = items.length;
                 
                 
                 //holds the URL's
-                URLS = [];
+                var URLS = [];
 
 
                 //parse through json items and collects URL's
