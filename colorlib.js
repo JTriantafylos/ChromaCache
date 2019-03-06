@@ -30,9 +30,7 @@ class Color{
             return col;
     }
 
-    getKeyword(){
-            return this.keyword;
-    }
+
     
     //a string conversion for testing purposes 
     toString(){
