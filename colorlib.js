@@ -15,8 +15,8 @@ const mongoose = require('mongoose');
 class Color{
 
     //constructor for color
-    constructor(keyword, r, g, b){
-            this.keyword = keyword;
+    constructor( r, g, b){
+            
             this.red = r;
             this.green = g;
             this.blue = b;
@@ -26,7 +26,7 @@ class Color{
     //basic getter and setters
     getRGB(){
 
-            var col = {'keyword': this.keyword, 'red': this.red, 'green': this.green, 'blue':this.blue};
+            var col = {'red': this.red, 'green': this.green, 'blue':this.blue};
             return col;
     }
 
@@ -36,7 +36,7 @@ class Color{
     
     //a string conversion for testing purposes 
     toString(){
-            var outp = this.keyword + ' has RGB '+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
+            var outp = 'The RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
             return outp;
     }
 
@@ -47,27 +47,33 @@ class Color{
 class Palette{
 
     //constructor for palette
-    constructor(colors){
-
+    constructor(keyword, colors){
+            this.keyword = keyword;
             this.colors = colors;
+            
 
     }
 
     //basic getters and setters
     getColors(){
 
-            return this.colors;
+        return this.colors;
 
+    }
+
+    getKeyword(){
+        return this.keyword;
     }
 
     addColors(color){
 
-            this.colors.push(color);
+        this.colors.push(color);
+        
     }
 
     //a string conversion for testing purposes
     toString(){
-            var outp = '';
+            var outp = this.getKeyword() + '\n';
             this.colors.forEach(function(col){
                     outp += col.toString() +'\n';
             });
@@ -78,22 +84,19 @@ class Palette{
 
 //tester code
 
-// var forestGreen = new Color('forest green', 34,139,34);
-// console.log(forestGreen.getRGB());
-// console.log(forestGreen.toString());
+//  var forest = new Color(34,139,34);
+//  console.log(forest.getRGB());
+//  console.log(forest.toString());
 
-// var bb = new Color('baby blue',137, 207, 240);
+//  var lime = new Color(0,128,0);
 
 
-// var cols  = [forestGreen];
-// var pal = new Palette(cols)
-// console.log(pal.getColors());
+//  var cols  = [forest, lime];
+//  var pal = new Palette('green',cols);
 
-// pal.addColors(bb);
-// console.log(pal.getColors());
-
-// console.log(pal.toString());
-
+//  console.log(pal.toString());
+//  pal.addColors(lime);
+//  console.log(pal);
 
 module.exports = {
     fetchImageLinks:function(keyword, api_key, srch_eng_id){
