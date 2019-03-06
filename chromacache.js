@@ -73,6 +73,7 @@ try {
 webServerApp.post('/api/clientMessage', function (req, res) {
     //var message = req.body.value;
 
-    console.log(colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc'));
+    //calling the fetch image links from color library
+    colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
        
 });
