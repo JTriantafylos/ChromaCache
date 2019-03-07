@@ -235,7 +235,7 @@ module.exports = {
     },
 
     isStored: function(key){
-        if(PaletteM.find({ "palette.keyword": key }).size() == 0){
+        if(PaletteM.count({ "palette.keyword": key }) == 0){
             return false;
         }else{
             return true;
