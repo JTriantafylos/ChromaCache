@@ -83,6 +83,7 @@ webServerApp.post('/api/clientMessage', function (req, res) {
     var cols  = [forest, lime];
     var pal = colorLib.createPalette('green',cols);
 
-    colorLib.addToDB(pal);
-       
+    //colorLib.addToDB(pal);
+    //colorLib.addToDB(colorLib.createPalette('red',cols));
+    console.log(colorLib.isStored('blue')); 
 });

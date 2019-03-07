@@ -170,10 +170,10 @@ module.exports = {
     addToDB: function (palette){
        
         //using the palette model from ./models/palette.js
-        const p = new PaletteM({palette: palette});
+        //const p = new PaletteM();
         
         //saving palette to database and giving a success responce
-        p.save().then(() => (console.log('added: ' + '\n'+ palette))).catch(function(err){
+        PaletteM.create({palette: palette}).then(() => (console.log('added: ' + '\n'+ palette))).catch(function(err){
             console.log('unsuccessful: ' + '\n' + err);
         });
 
@@ -183,10 +183,29 @@ module.exports = {
 
     fetchPalette: function(key){
 
+        PaletteM.find({ "palette.keyword": key }, function(err, palette){
+            if(err){
+                console.log('error fetching palettes: ' + err);
+            }else{
+                
+                palette.forEach(function(data){
+
+                    //getting all the color values in the palette
+                    return (data.palette.colors);
+                });
+            }
+        });
+        
+       
+        
     },
 
     isStored: function(key){
-
+        if(PaletteM.find({ "palette.keyword": key }).size() == 0){
+            return false;
+        }else{
+            return true;
+        }
     },
 
     createColor: function(r, g, b){
