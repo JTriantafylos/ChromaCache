@@ -1,27 +1,25 @@
 # ChromaCache
 ## CUHacking 2019 Submission
 
-A Bootstrap website with a Node.JS and Python back-end, utilizing Google Cloud Platform's Vision API to enable users to search keywords and be given a color palette made up of the most common colors found in images matching that keyword on Google Images.
+A Bootstrap website with a Node.JS back-end, utilizing Google Cloud Platform's Vision API to enable users to search keywords and be given a color palette made up of the most common colors found in images matching that keyword on Google Images.
 
 See us at [ChromaCache](chromacache.com)!
 
 **Dependencies:**
 
-- Python - Version 3+
 - Node.JS
 
 **Node Dependencies:**
 
 - @google-cloud/vision
-- wait-until
-- request
-- python-shell
-- typescript
-- typescript-map
+- body-parser
+- express
+- mongoose
+- node-fetch
 
 **To-Do:**
 - [ ] Update README.md
-- [ ] Implement Google Images web scraping
+- [x] Implement Google Images web scraping
 - [x] Create a image scraping library
 - [ ] Create a colour palette database
 - [ ] Implement libraries and database
