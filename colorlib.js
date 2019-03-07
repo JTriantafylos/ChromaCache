@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const vision = require('@google-cloud/vision');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/paletteDB');
+/*mongoose.connect('mongodb://localhost/paletteDB');
 let db = mongoose.connection;
 
 //checking for db connection
@@ -23,8 +23,7 @@ db.on('error', function(err){
 
 //bring in palette model
 let PaletteM = require('./models/palette');
-
-//const vision = require('@google-cloud/vision');
+*/
 
 //api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
 //srch_eng_id = "012928527837730696752:wzqnawdyxwc"
@@ -113,49 +112,42 @@ class Palette{
 //   addToDB(pal);
 
 module.exports = {
-    fetchImageLinks:function(keyword, api_key, srch_eng_id){
+    fetchImageLinks:async function(keyword, api_key, srch_eng_id){
+        // Holds the URL's to be returned
+        var URLS = [];
 
-        //search request from the custom GSE(Google search engine)
+        // Search request from the custom GSE(Google search engine)
         var srchRequest = 'https://www.googleapis.com/customsearch/v1?key=' + api_key + '&cx=' + srch_eng_id + '&q=' + keyword + '&searchType=image';
 
-        //fetch from node-fetch
-        fetch(srchRequest).then(res => res.json())
-            .then(function(json) {
-                //got json, now splitting into separate URL's
-                
-                //splitting json into elements
-                var items = json.items;
-                var itemsLength = items.length;
-                
-                
-                //holds the URL's
-                var URLS = [];
+        // Fetches the JSON of the search request asynchronously
+        var fetchResult = await fetch(srchRequest);
+        var jsonResult = await fetchResult.json();
 
-
-                //parse through json items and collects URL's
-                var i;
-                for(i = 0; i <itemsLength; i ++){
-                
-                    URLS.push(items[i].link);
-                
-                }
-
-                
-                //do stuff
-                console.log(URLS);
-                
-                
-            }).catch(function(error) {
-                
-                //catches any potential 404 errors
-                console.log('Error: ', error);
-            });      
+        // Parse through json items and collects URL's
+        for (var item of jsonResult.items) {
+            URLS.push(item.link);
+        }
+        // Returns an array of image links with 10 links in it
+        return URLS;
     },
 
     fetchDominantColorPalette:async function(keyword, imageLinks){
         // Palette that will be filled and returned by this function
         var dominantPalette = new Palette(keyword, []);
 
+        // Array of image properties for each image in imageLinks
+        var imagePropertiesArray = [];
+
+        for (let link of imageLinks) {
+            // Gets the image properties of the current image link
+            let [imageResult] = await imageClient.imageProperties(link);
+
+            // Checks if there are valid image properties for the current
+            // image, and if so, adds those properties to the imagePropertiesArray
+            if (imageResult.imagePropertiesAnnotation != null){
+                imagePropertiesArray.push(imageResult);
+            }
+        }
         // Iterates through the first 7 dominant colors of each image link
         // and adds their RGB 
         var i;
@@ -168,36 +160,33 @@ module.exports = {
             // Runnings total of how many dominant colors have been processed
             var colorCount = 0;
 
-            for(let link of imageLinks){
-                // Gets the image properties of the current image link
-                let [imageResult] = await imageClient.imageProperties(link);
-
-                //console.log('test', imageResult);
-
+            for (let properties of imagePropertiesArray){
                 // Gets the dominant colors of the current image link
-                let dominantColors = imageResult.imagePropertiesAnnotation.dominantColors.colors;
+                let dominantColors = properties.imagePropertiesAnnotation.dominantColors.colors;
 
-                // Adds the R, G, and B 
-                // values to running totals and increases counter
-                redTotal += dominantColors[i].color.red;
-                greenTotal += dominantColors[i].color.green;
-                blueTotal += dominantColors[i].color.blue;
-                
-                colorCount++;
-                //console.log("test");
+                // Ensures that the current color number being iterated through
+                // exists within the current images dominant colors
+                if(i < dominantColors.length){
+                    // Adds the R, G, and B 
+                    // values to running totals and increases counter
+                    redTotal += dominantColors[i].color.red;
+                    greenTotal += dominantColors[i].color.green;
+                    blueTotal += dominantColors[i].color.blue;
+
+                    colorCount++;
+                }
             }
 
             // Gets the average color from the array of images for the current color (n of 7)
-            var redAverage = redTotal / colorCount;
-            var greenAverage = greenTotal / colorCount;
-            var blueAverage = blueTotal / colorCount;
+            var redAverage = Math.floor(redTotal / colorCount);
+            var greenAverage = Math.floor(greenTotal / colorCount);
+            var blueAverage = Math.floor(blueTotal / colorCount);
 
             // Adds the new nth of 7 color to the palette as a new color object
             dominantPalette.addColor(new Color(redAverage, greenAverage, blueAverage));
             //console.log(dominantPalette);
         }
         // Returns a dominant palette with 7 colors in it
-        //console.log("Test")
         return  dominantPalette;
     },
 
