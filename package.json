@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jtriantafylos/ChromaCache#readme",
   "dependencies": {
+    "@google-cloud/vision": "^0.25.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.17",

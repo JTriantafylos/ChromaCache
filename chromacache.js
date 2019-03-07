@@ -71,9 +71,10 @@ try {
 */
 
 webServerApp.post('/api/clientMessage', function (req, res) {
-    //var message = req.body.value;
+    var keyword = req.body.value.toLowerCase();
 
     //calling the fetch image links from color library
-    colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+    colorLib.fetchDominantColorPalette('red', ['https://cdn-images-1.medium.com/max/800/1*CkAwTulAJNApZ3HvljqgLA.png']).then(result => console.log(result));
+    //colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
        
 });
