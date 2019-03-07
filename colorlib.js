@@ -185,9 +185,9 @@ module.exports = {
         
         //saving palette to database and giving a success responce
         PaletteM.create({date:d, palette: palette})
-            .catch(function(err){
-                console.log('unsuccessful: ' + '\n' + err);
-            });
+        .catch(function(err){
+            console.log('unsuccessful: ' + '\n' + err);
+        });
 
 
     },
@@ -206,17 +206,17 @@ module.exports = {
         var pal;
         
         //fetching palette from the database
-        await PaletteM.find({ 'palette.keyword': key }, function(err, palette){
-            if(err){
-                console.log('error fetching palettes: ' + err);
-            }else{
-                
-                palette.forEach(function(data){
+        await PaletteM.find({ 'palette.keyword': key })
+        .then(function(palette){
+            
+            palette.forEach(function(data){
 
-                    //getting all the color values in the palette
-                    pal =  (data.palette);
-                });
-            }
+                //getting all the color values in the palette
+                pal =  (data.palette);
+            });
+            
+        }).catch(function(err){
+            console.log('error fetching palettes: ' + err);
         });
         return pal;
        
@@ -239,28 +239,29 @@ module.exports = {
         
 
         var valid;
-        await PaletteM.find({ 'palette.keyword': key }, function(err, palette){
-            if(err){
-                console.log('error checking validity: ' + err);
-            }else{
-                //getting current date
-                var date = new Date();
-                var d = [];
-                d.push(date.getUTCMonth()+1);
-                d.push(date.getUTCFullYear());
+        await PaletteM.find({ 'palette.keyword': key }).then (function(palette){
+            
+            //getting current date
+            var date = new Date();
+            var d = [];
+            d.push(date.getUTCMonth()+1);
+            d.push(date.getUTCFullYear());
+                
 
-
-                palette.forEach(function(data){
-                    //comparing the dates
-                    if(data.date[1] == d[1] && data.date[0] == d[0]){
-                        
-                        valid = true;
-                    }else{
-                        valid = false;
-                    }
+            palette.forEach(function(data){
+    
+                //comparing the dates
+    
+                if(data.date[1] == d[1] && data.date[0] == d[0]){
                     
-                });
-            }
+                    valid = true;
+                }else{
+                    valid = false;
+                }
+                    
+            });
+        }).catch(function(err){
+            console.log('error checking validity: ' + err);
         });
         return valid;
 

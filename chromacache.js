@@ -74,7 +74,6 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     // Turns search keyword to lowercase
     var keyword = req.body.value.toLowerCase();
 
-    let dominantPalette;
     //check if keyword is in database
     var stored;
     await colorLib.isStored(keyword).then(function(res){
@@ -88,15 +87,14 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         await colorLib.isValid(keyword).then(function(res){
             valid = res;
         });
-
+        
         if(valid){
 
             //return database response
             await colorLib.fetchPalette(keyword).then(function(res){
-                dominantPalette = res;
+                sendToFrontEnd(res);
                 
             });
-            sendToFrontEnd(dominantPalette);
             
         }else{
             await colorLib.removeFromDB(keyword);
@@ -117,18 +115,18 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         });
 
         // Calling the fetch dominant palette from color library
-        await colorLib.fetchDominantColorPalette(keyword, imageLinks).then(function (result) {
-            dominantPalette = result;
+        await colorLib.fetchDominantColorPalette(keyword, imageLinks).then( async function (result) {
+            //adds new palette to database
+            await colorLib.addToDB(result);
+            sendToFrontEnd(result);
         });
 
-        //adds new palette to database
-        await colorLib.addToDB(dominantPalette);
-        sendToFrontEnd(dominantPalette);
+        
     }
     
     // Sends the dominant palette to the client
 
-    async function sendToFrontEnd(dp){
+    function sendToFrontEnd(dp){
         res.send(dp);
     }
     
