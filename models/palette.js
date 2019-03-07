@@ -1,15 +1,15 @@
 let mongoose = require('mongoose');
-let Palette = require('./../colorlib')
+let Palette = require('./../colorlib');
 let paletteSchema = mongoose.Schema({
-        palette: {
-                type: Palette,
-                require: true
+    palette: {
+        type: Palette,
+        require: true
                 
-        },
-        date:{
-                type: [Number],
-                require: true
-        }
+    },
+    date:{
+        type: [Number],
+        require: true
+    }
         
 });
 

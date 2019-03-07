@@ -107,8 +107,8 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         collectPalette();
     }
 
-   async function collectPalette(){
-       // Calling the fetch image links from color library
+    async function collectPalette(){
+        // Calling the fetch image links from color library
         let imageLinks = [];
         await colorLib.fetchImageLinks(keyword,
             'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw',
@@ -124,7 +124,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         //adds new palette to database
         await colorLib.addToDB(dominantPalette);
         sendToFrontEnd(dominantPalette);
-   }
+    }
     
     // Sends the dominant palette to the client
 
