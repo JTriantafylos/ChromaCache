@@ -2,15 +2,23 @@
 
 $( document ).ready(function() {
     $('#searchForm').submit(function(event) {
-        $('#resultPalette').empty();
-
-        $('#resultPalette').append('<h1 id="loadingMessage">Finding your palette...</h1>');
 
         // Prevent the form from submitting via the browser.
         event.preventDefault();
 
-        // Calls the AJAX POSTing function
-        ajaxPost();
+        // Checks if the input is alphanumeric
+        if ($('#searchID').val().match(/^[a-zA-Z0-9-\s]+$/)){
+            // Empties the current result palette
+            $('#resultPalette').empty();
+
+            // Displays the loading message
+            $('#resultPalette').append('<h1 id="loadingMessage">Finding your palette...</h1>');
+
+            // Calls the AJAX POSTing function
+            ajaxPost();
+        }else{
+            $('#searchID').val('Please enter a valid keyword!');
+        }
     });
 
     function ajaxPost() {
