@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const vision = require('@google-cloud/vision');
 const mongoose = require('mongoose');
 
-/*mongoose.connect('mongodb://localhost/paletteDB');
+mongoose.connect('mongodb://localhost/paletteDB');
 let db = mongoose.connection;
 
 //checking for db connection
@@ -23,7 +23,6 @@ db.on('error', function(err){
 
 //bring in palette model
 let PaletteM = require('./models/palette');
-*/
 
 //api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
 //srch_eng_id = "012928527837730696752:wzqnawdyxwc"
@@ -94,22 +93,6 @@ class Palette{
     }
 }
 
-//tester code
-
-//   var forest = new Color(34,139,34);
-//   console.log(forest.getRGB());
-//   console.log(forest.toString());
-
-//   var lime = new Color(0,128,0);
-
-
-//   var cols  = [forest, lime];
-//   var pal = new Palette('green',cols);
-
-//   console.log(pal.toString());
-//   pal.addColors(lime);
-//   console.log(pal);
-//   addToDB(pal);
 
 module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
@@ -191,12 +174,18 @@ module.exports = {
     },
 
     addToDB: function (palette){
-       
+        
+        //getting date of search
+        var date = new Date();
+        var d = [];
+        d.push(date.getUTCMonth()+1);
+        d.push(date.getUTCFullYear());
+
         //using the palette model from ./models/palette.js
-        //const p = new PaletteM();
         
         //saving palette to database and giving a success responce
-        PaletteM.create({palette: palette}).then(() => (console.log('added: ' + '\n'+ palette))).catch(function(err){
+        PaletteM.create({date:d, palette: palette})
+        .catch(function(err){
             console.log('unsuccessful: ' + '\n' + err);
         });
 
@@ -204,9 +193,11 @@ module.exports = {
     },
 
 
-    fetchPalette: function(key){
-
-        PaletteM.find({ "palette.keyword": key }, function(err, palette){
+    fetchPalette: async function(key){
+        var pal;
+        
+        //fetching palette from the database
+        await PaletteM.find({ "palette.keyword": key }, function(err, palette){
             if(err){
                 console.log('error fetching palettes: ' + err);
             }else{
@@ -214,23 +205,56 @@ module.exports = {
                 palette.forEach(function(data){
 
                     //getting all the color values in the palette
-                    return (data.palette.colors);
+                    pal =  (data.palette);
                 });
             }
         });
-        
+        return pal;
        
         
     },
 
-    isStored: function(key){
-        if(PaletteM.count({ "palette.keyword": key }) == 0){
+    isStored: async function(key){
+        var count = await PaletteM.count({ "palette.keyword": key });
+        if(count == 0){
             return false;
         }else{
             return true;
         }
     },
 
+    //this function will return true if the
+    //color palette is recent, false if it needs updating
+    isValid: async function(key){
+        
+
+        var valid;
+        await PaletteM.find({ "palette.keyword": key }, function(err, palette){
+            if(err){
+                console.log('error checking validity: ' + err);
+            }else{
+                //getting current date
+                var date = new Date();
+                var d = [];
+                d.push(date.getUTCMonth()+1);
+                d.push(date.getUTCFullYear());
+
+
+                palette.forEach(function(data){
+                    //comparing the dates
+                    if(data.date[1] == d[1] && data.date[0] == d[0]){
+                        
+                        valid = true;
+                    }else{
+                        valid = false;
+                    }
+                    
+                });
+            }
+        });
+        return valid;
+
+    },
     createColor: function(r, g, b){
 
         //using the color class

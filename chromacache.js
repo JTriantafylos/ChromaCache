@@ -74,34 +74,62 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     // Turns search keyword to lowercase
     var keyword = req.body.value.toLowerCase();
 
-    // Calling the fetch image links from color library
-    let imageLinks = [];
-    await colorLib.fetchImageLinks(keyword,
-        'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw',
-        '012928527837730696752:wzqnawdyxwc').then(function(result){
-        imageLinks = result;
-    });
-
-    // Calling the fetch dominant palette from color library
     let dominantPalette;
-    await colorLib.fetchDominantColorPalette(keyword, imageLinks).then(function (result) {
-        dominantPalette = result;
+
+    //check if keyword is in database
+    var stored;
+    await colorLib.isStored(keyword).then(function(res){
+        stored = res;
     });
 
-    /* testing code
-    var forest = colorLib.createColor(34,139,34);
-    var lime = colorLib.createColor(0,128,0);
+    if(stored){
+        
+        //check if palette is valid
+        var valid;
+        await colorLib.isValid(keyword).then(function(res){
+            valid = res;
+        });
 
-    var cols  = [forest, lime];
-    var pal = colorLib.createPalette('green',cols);
+        if(valid){
+            
+            //return database response
+            await colorLib.fetchPalette(keyword).then(function(res){
+                dominantPalette = res;
+                
+            });
+            sendToFrontEnd(dominantPalette);
+            
+        }else{
+            collectPalette();
+        }
 
-    colorLib.addToDB(pal);
-    */
+    }else{
+        collectPalette();
+    }
 
-    //colorLib.addToDB(pal);
-    //colorLib.addToDB(colorLib.createPalette('red',cols));
-    //console.log(colorLib.isStored('blue')); 
+   async function collectPalette(){
+       // Calling the fetch image links from color library
+        let imageLinks = [];
+        await colorLib.fetchImageLinks(keyword,
+            'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw',
+            '012928527837730696752:wzqnawdyxwc').then(function(result){
+            imageLinks = result;
+        });
 
+        // Calling the fetch dominant palette from color library
+        await colorLib.fetchDominantColorPalette(keyword, imageLinks).then(function (result) {
+            dominantPalette = result;
+        });
+
+        //adds new palette to database
+        await colorLib.addToDB(dominantPalette);
+        sendToFrontEnd(dominantPalette);
+   }
+    
     // Sends the dominant palette to the client
-    res.send(dominantPalette);
+
+    async function sendToFrontEnd(dp){
+        res.send(dp);
+    }
+    
 });

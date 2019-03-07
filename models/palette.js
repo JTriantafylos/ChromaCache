@@ -4,6 +4,11 @@ let paletteSchema = mongoose.Schema({
         palette: {
                 type: Palette,
                 require: true
+                
+        },
+        date:{
+                type: [Number],
+                require: true
         }
         
 });
