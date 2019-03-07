@@ -167,20 +167,20 @@ module.exports = {
                 // Ensures that the current color number being iterated through
                 // exists within the current images dominant colors
                 if(i < dominantColors.length){
-                    // Adds the R, G, and B 
+                    // Adds the R, G, and B (squared)
                     // values to running totals and increases counter
-                    redTotal += dominantColors[i].color.red;
-                    greenTotal += dominantColors[i].color.green;
-                    blueTotal += dominantColors[i].color.blue;
+                    redTotal += Math.pow(dominantColors[i].color.red, 2);
+                    greenTotal += Math.pow(dominantColors[i].color.green, 2);
+                    blueTotal += Math.pow(dominantColors[i].color.blue, 2);
 
                     colorCount++;
                 }
             }
 
             // Gets the average color from the array of images for the current color (n of 7)
-            var redAverage = Math.floor(redTotal / colorCount);
-            var greenAverage = Math.floor(greenTotal / colorCount);
-            var blueAverage = Math.floor(blueTotal / colorCount);
+            var redAverage = Math.floor(Math.sqrt(redTotal / colorCount));
+            var greenAverage = Math.floor(Math.sqrt(greenTotal / colorCount));
+            var blueAverage = Math.floor(Math.sqrt(blueTotal / colorCount));
 
             // Adds the new nth of 7 color to the palette as a new color object
             dominantPalette.addColor(new Color(redAverage, greenAverage, blueAverage));
