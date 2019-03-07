@@ -99,8 +99,11 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     var pal = colorLib.createPalette('green',cols);
 
     colorLib.addToDB(pal);
-       */
+    */
 
     // Sends the response to the client
     res.send();
+    //colorLib.addToDB(pal);
+    //colorLib.addToDB(colorLib.createPalette('red',cols));
+    console.log(colorLib.isStored('blue')); 
 });
