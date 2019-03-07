@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const vision = require('@google-cloud/vision');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/paletteDB');
+mongoose.connect('mongodb://localhost/paletteDB',{ useNewUrlParser: true });
 let db = mongoose.connection;
 
 //checking for db connection
@@ -191,6 +191,15 @@ module.exports = {
 
 
     },
+    removeFromDB: function(key){
+
+        PaletteM.deleteOne({ "palette.keyword": key })
+        .catch(function(err){
+            console.log('unsuccessful: ' + '\n' + err);
+        });
+
+
+    },
 
 
     fetchPalette: async function(key){
@@ -215,7 +224,7 @@ module.exports = {
     },
 
     isStored: async function(key){
-        var count = await PaletteM.count({ 'palette.keyword': key });
+        var count = await PaletteM.countDocuments({ "palette.keyword": key });
         if(count == 0){
             return false;
         }else{
@@ -223,6 +232,7 @@ module.exports = {
         }
     },
 
+    
     //this function will return true if the
     //color palette is recent, false if it needs updating
     isValid: async function(key){

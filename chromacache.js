@@ -75,7 +75,6 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     var keyword = req.body.value.toLowerCase();
 
     let dominantPalette;
-
     //check if keyword is in database
     var stored;
     await colorLib.isStored(keyword).then(function(res){
@@ -91,7 +90,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         });
 
         if(valid){
-            
+
             //return database response
             await colorLib.fetchPalette(keyword).then(function(res){
                 dominantPalette = res;
@@ -100,6 +99,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
             sendToFrontEnd(dominantPalette);
             
         }else{
+            await colorLib.removeFromDB(keyword);
             collectPalette();
         }
 
