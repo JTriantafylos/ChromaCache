@@ -185,9 +185,9 @@ module.exports = {
         
         //saving palette to database and giving a success responce
         PaletteM.create({date:d, palette: palette})
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
+            .catch(function(err){
+                console.log('unsuccessful: ' + '\n' + err);
+            });
 
 
     },
@@ -197,7 +197,7 @@ module.exports = {
         var pal;
         
         //fetching palette from the database
-        await PaletteM.find({ "palette.keyword": key }, function(err, palette){
+        await PaletteM.find({ 'palette.keyword': key }, function(err, palette){
             if(err){
                 console.log('error fetching palettes: ' + err);
             }else{
@@ -215,7 +215,7 @@ module.exports = {
     },
 
     isStored: async function(key){
-        var count = await PaletteM.count({ "palette.keyword": key });
+        var count = await PaletteM.count({ 'palette.keyword': key });
         if(count == 0){
             return false;
         }else{
@@ -229,7 +229,7 @@ module.exports = {
         
 
         var valid;
-        await PaletteM.find({ "palette.keyword": key }, function(err, palette){
+        await PaletteM.find({ 'palette.keyword': key }, function(err, palette){
             if(err){
                 console.log('error checking validity: ' + err);
             }else{
