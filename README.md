@@ -8,6 +8,7 @@ See us at [ChromaCache](chromacache.com)!
 **Dependencies:**
 
 - Node.JS
+- MongoDB
 
 **Node Dependencies:**
 
@@ -21,9 +22,10 @@ See us at [ChromaCache](chromacache.com)!
 - [ ] Update README.md
 - [x] Implement Google Images web scraping
 - [x] Create a image scraping library
-- [ ] Create a colour palette database
-- [ ] Implement libraries and database
-- [ ] Create a frequency handler in database
+- [x] Create a colour palette database
+- [x] Implement libraries and database
+- [x] Create a frequency handler in database
 - [ ] Implement palette choice
+- [ ] Implement HTTPS into Express web server
 
  Created **James Triantafylos (@JTriantafylos)** & **Eyas Valdez (@SpiltBeans)**.
