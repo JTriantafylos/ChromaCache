@@ -74,7 +74,15 @@ webServerApp.post('/api/clientMessage', function (req, res) {
     var keyword = req.body.value.toLowerCase();
 
     //calling the fetch image links from color library
-    colorLib.fetchDominantColorPalette('red', ['https://cdn-images-1.medium.com/max/800/1*CkAwTulAJNApZ3HvljqgLA.png']).then(result => console.log(result));
-    //colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+    colorLib.fetchImageLinks(req.body.value, 'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw','012928527837730696752:wzqnawdyxwc');
+
+    //testing code
+    var forest = colorLib.createColor(34,139,34);
+    var lime = colorLib.createColor(0,128,0);
+
+    var cols  = [forest, lime];
+    var pal = colorLib.createPalette('green',cols);
+
+    colorLib.addToDB(pal);
        
 });

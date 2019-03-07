@@ -7,7 +7,24 @@ const fetch = require('node-fetch');
 const vision = require('@google-cloud/vision');
 const mongoose = require('mongoose');
 
-//mongoose.connect('mongodb')
+mongoose.connect('mongodb://localhost/paletteDB');
+let db = mongoose.connection;
+
+//checking for db connection
+db.once('open', function(){
+    console.log('Connected to MongoDB');
+});
+
+//checking for db errors
+db.on('error', function(err){
+    console.log(err);
+});
+
+
+//bring in palette model
+let PaletteM = require('./models/palette');
+
+//const vision = require('@google-cloud/vision');
 
 //api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
 //srch_eng_id = "012928527837730696752:wzqnawdyxwc"
@@ -39,7 +56,7 @@ class Color{
     
     //a string conversion for testing purposes 
     toString(){
-        var outp = 'The RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
+        var outp = 'Color RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
         return outp;
     }
 
@@ -80,19 +97,20 @@ class Palette{
 
 //tester code
 
-//  var forest = new Color(34,139,34);
-//  console.log(forest.getRGB());
-//  console.log(forest.toString());
+//   var forest = new Color(34,139,34);
+//   console.log(forest.getRGB());
+//   console.log(forest.toString());
 
-//  var lime = new Color(0,128,0);
+//   var lime = new Color(0,128,0);
 
 
-//  var cols  = [forest, lime];
-//  var pal = new Palette('green',cols);
+//   var cols  = [forest, lime];
+//   var pal = new Palette('green',cols);
 
-//  console.log(pal.toString());
-//  pal.addColors(lime);
-//  console.log(pal);
+//   console.log(pal.toString());
+//   pal.addColors(lime);
+//   console.log(pal);
+//   addToDB(pal);
 
 module.exports = {
     fetchImageLinks:function(keyword, api_key, srch_eng_id){
@@ -185,7 +203,41 @@ module.exports = {
 
     addToDB: function (palette){
        
+        //using the palette model from ./models/palette.js
+        const p = new PaletteM({palette: palette});
+        
+        //saving palette to database and giving a success responce
+        p.save().then(() => (console.log('added: ' + '\n'+ palette))).catch(function(err){
+            console.log('unsuccessful: ' + '\n' + err);
+        });
+
+
+    },
+
+
+    fetchPalette: function(key){
+
+    },
+
+    isStored: function(key){
+
+    },
+
+    createColor: function(r, g, b){
+
+        //using the color class
+        var c = new Color(r, g, b);
+        return c;
+    },
+    createPalette:function (keyword, colors){
+
+        //using palette class
+        var p = new Palette(keyword, colors);
+        return p;
     }
+
+
+
 };
         
         
