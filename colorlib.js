@@ -4,6 +4,7 @@
 * ----------------------------------------------------
 */
 const fetch = require('node-fetch');
+const vision = require('@google-cloud/vision');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/paletteDB');
@@ -27,6 +28,11 @@ let PaletteM = require('./models/palette');
 
 //api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
 //srch_eng_id = "012928527837730696752:wzqnawdyxwc"
+
+// Creates a Google Vision image annotator client with the given service key
+const imageClient = new vision.ImageAnnotatorClient({
+    keyFilename: './secure/chromacache-d98d5cf45be5.json'
+});
 
 class Color{
 
@@ -64,25 +70,19 @@ class Palette{
     constructor(keyword, colors){
         this.keyword = keyword;
         this.colors = colors;
-            
-
     }
 
     //basic getters and setters
     getColors(){
-
         return this.colors;
-
     }
 
     getKeyword(){
         return this.keyword;
     }
 
-    addColors(color){
-
+    addColor(color){
         this.colors.push(color);
-        
     }
 
     //a string conversion for testing purposes
@@ -91,8 +91,7 @@ class Palette{
         this.colors.forEach(function(col){
             outp += col.toString() +'\n';
         });
-        return outp;
-            
+        return outp;      
     }
 }
 
@@ -153,18 +152,53 @@ module.exports = {
             });      
     },
 
-    fetchDominantColorPalette:function(imageLinks){
-        var dominantPalette;
-        
-        //const imageClient = new vision.ImageAnnotatorClient({
-        //    keyFilename: './secure/chromacache-d98d5cf45be5.json'    
-        //});
+    fetchDominantColorPalette:async function(keyword, imageLinks){
+        // Palette that will be filled and returned by this function
+        var dominantPalette = new Palette(keyword, []);
 
-        //const [result] = await imageClient.imageProperties(
-        //    'd'
-        //);
+        // Iterates through the first 7 dominant colors of each image link
+        // and adds their RGB 
+        var i;
+        for (i = 0; i <= 7; i++) {
+            // Runnings totals for R, G, and B values
+            var redTotal = 0;
+            var greenTotal = 0;
+            var blueTotal = 0;
 
-        return dominantPalette;
+            // Runnings total of how many dominant colors have been processed
+            var colorCount = 0;
+
+            for(let link of imageLinks){
+                // Gets the image properties of the current image link
+                let [imageResult] = await imageClient.imageProperties(link);
+
+                //console.log('test', imageResult);
+
+                // Gets the dominant colors of the current image link
+                let dominantColors = imageResult.imagePropertiesAnnotation.dominantColors.colors;
+
+                // Adds the R, G, and B 
+                // values to running totals and increases counter
+                redTotal += dominantColors[i].color.red;
+                greenTotal += dominantColors[i].color.green;
+                blueTotal += dominantColors[i].color.blue;
+                
+                colorCount++;
+                //console.log("test");
+            }
+
+            // Gets the average color from the array of images for the current color (n of 7)
+            var redAverage = redTotal / colorCount;
+            var greenAverage = greenTotal / colorCount;
+            var blueAverage = blueTotal / colorCount;
+
+            // Adds the new nth of 7 color to the palette as a new color object
+            dominantPalette.addColor(new Color(redAverage, greenAverage, blueAverage));
+            //console.log(dominantPalette);
+        }
+        // Returns a dominant palette with 7 colors in it
+        //console.log("Test")
+        return  dominantPalette;
     },
 
     addToDB: function (palette){
