@@ -17,9 +17,8 @@ db.once('open', function(){
 
 //checking for db errors
 db.on('error', function(err){
-    console.log(err);
+    console.error(err);
 });
-
 
 //bring in palette model
 let PaletteM = require('./models/palette');
@@ -42,8 +41,7 @@ const imageClient = new vision.ImageAnnotatorClient({
 class Color{
 
     //constructor for color
-    constructor( r, g, b){
-            
+    constructor( r, g, b){    
         this.red = r;
         this.green = g;
         this.blue = b;
@@ -52,21 +50,15 @@ class Color{
 
     //basic getter and setters
     getRGB(){
-
         var col = {'red': this.red, 'green': this.green, 'blue':this.blue};
         return col;
     }
 
-
-    
     //a string conversion for testing purposes 
     toString(){
         var outp = 'Color RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
         return outp;
     }
-
-
-
 }
 
 class Palette{
@@ -192,20 +184,18 @@ module.exports = {
         
         //saving palette to database and giving a success responce
         PaletteM.create({date:d, palette: palette})
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
+            .catch(function(err){
+                console.error('unsuccessful: ' + '\n' + err);
+            });
 
 
     },
     removeFromPaletteDB: function(key){
 
-        PaletteM.deleteOne({ "palette.keyword": key })
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
-
-
+        PaletteM.deleteOne({ 'palette.keyword': key })
+            .catch(function(err){
+                console.error('unsuccessful: ' + '\n' + err);
+            });
     },
 
 
@@ -214,24 +204,19 @@ module.exports = {
         
         //fetching palette from the database
         await PaletteM.find({ 'palette.keyword': key })
-        .then(function(palette){
-            
-            palette.forEach(function(data){
-
-                //getting all the color values in the palette
-                pal =  (data.palette);
+            .then(function(palette){       
+                palette.forEach(function(data){
+                    //getting all the color values in the palette
+                    pal =  (data.palette);
+                });
+            }).catch(function(err){
+                console.error('error fetching palettes: ' + err);
             });
-            
-        }).catch(function(err){
-            console.log('error fetching palettes: ' + err);
-        });
-        return pal;
-       
-        
+        return pal;   
     },
 
     isStored: async function(key){
-        var count = await PaletteM.countDocuments({ "palette.keyword": key });
+        var count = await PaletteM.countDocuments({ 'palette.keyword': key });
         if(count == 0){
             return false;
         }else{
@@ -239,12 +224,9 @@ module.exports = {
         }
     },
 
-    
     //this function will return true if the
     //color palette is recent, false if it needs updating
     isValid: async function(key){
-        
-
         var valid;
         await PaletteM.find({ 'palette.keyword': key }).then (function(palette){
             
@@ -253,7 +235,6 @@ module.exports = {
             var d = [];
             d.push(date.getMonth()+1);
             d.push(date.getUTCFullYear());
-                
 
             palette.forEach(function(data){
     
@@ -268,19 +249,17 @@ module.exports = {
                     
             });
         }).catch(function(err){
-            console.log('error checking validity: ' + err);
+            console.error('error checking validity: ' + err);
         });
         return valid;
 
     },
     createColor: function(r, g, b){
-
         //using the color class
         var c = new Color(r, g, b);
         return c;
     },
     createPalette:function (keyword, colors){
-
         //using palette class
         var p = new Palette(keyword, colors);
         return p;
@@ -301,12 +280,9 @@ module.exports = {
         d.push(date.getUTCFullYear());
 
         UsersM.create({firstDate:d, latestDate:d, user: user, usages: 1})
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
-        
-
-
+            .catch(function(err){
+                console.error('unsuccessful: ' + '\n' + err);
+            });
     },
     incUserDB: async function(user){
         var date = new Date();
@@ -314,7 +290,6 @@ module.exports = {
         d.push(date.getDate());
         d.push(date.getMonth()+1);
         d.push(date.getUTCFullYear());
-    
        
         await UsersM.find({'user':user}).then(function(res){
             
@@ -327,15 +302,12 @@ module.exports = {
                     
                     await UsersM.updateOne({'user':user},{$set: {'latestDate':d}}, {multi: false});
                 }
-            });
-            
-            
+            });      
         }).catch(function(err){
-            console.log('error updating traffic: ' + err);
+            console.error('error updating traffic: ' + err);
         });
-
-       
     },
+
     incToTrafficDB: async function(){
         var date = new Date();
         var d = [];
@@ -343,30 +315,20 @@ module.exports = {
         d.push(date.getMonth()+1);
         d.push(date.getUTCFullYear());
     
-       
         await TrafficM.find({'date':d}).then(function(res){
-            
-            
             if(res.length == 0){
                 TrafficM.create({'date':d, 'traffic': 1});
             }
-            res.forEach(async function(ret){
-                
+            res.forEach(async function(ret){  
                 if(JSON.stringify(ret.date) == JSON.stringify(d)){
                     await TrafficM.updateOne({'date':d},{$set: {'traffic':(ret.traffic +1)}}, {multi: false});
                 }else{
-                    
                     TrafficM.create({'date':d, 'traffic': 1});
                 }
             });
-            
-            
         }).catch(function(err){
-            console.log('error updating traffic: ' + err);
-        });
-
-       
+            console.error('error updating traffic: ' + err);
+        }); 
     }
-
 };
         
