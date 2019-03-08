@@ -278,8 +278,8 @@ module.exports = {
         var p = new Palette(keyword, colors);
         return p;
     },
-    isUser: async function(user){
 
+    isUser: async function(user){
         //counts occurrences for the user
         var count = await UsersM.countDocuments({ 'user': user });
         if(count == 0){
@@ -288,8 +288,8 @@ module.exports = {
             return true;
         }
     },
-    addToUserDB: function(user, keyword){
 
+    addToUserDB: function(user, keyword){
         //creates new user with given fields
         var date = new Date();
         var currentDate = [];
@@ -297,17 +297,13 @@ module.exports = {
         currentDate.push(date.getMonth()+1);
         currentDate.push(date.getUTCFullYear());
 
-
         UsersM.create({firstDate:currentDate, latestDate:currentDate, searched: new Searches([keyword]), user: user, usages: 1})
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
-        
-
-
+            .catch(function(err){
+                console.error('unsuccessful: ' + '\n' + err);
+            });
     },
-    incUserDB: async function(user, keyword){
 
+    incUserDB: async function(user, keyword){
         //gets current date
         var date = new Date();
         var currentDate = [];
@@ -323,7 +319,6 @@ module.exports = {
                 var temp = data.searched.keywords;
                 var counter = 0; 
                 await temp.forEach(function(searches){
-
                     if(searches == keyword){
                         counter ++;
                     }
@@ -360,20 +355,16 @@ module.exports = {
         await TrafficM.find({'date':currentDate}).then(function(traffic){
 
             //checking to see if there has been any traffic
-            if(traffic.length == 0){
-                
+            if(traffic.length == 0){  
                 //if there is no traffic, create an instance for the day
                 TrafficM.create({'date':currentDate, 'traffic': 1});
             }
             traffic.forEach(async function(data){  
-
                 //checks again to see if there was traffic on that day
                 if(JSON.stringify(data.date) == JSON.stringify(currentDate)){
-                    
                     //increases how much traffic
                     await TrafficM.updateOne({'date':currentDate},{$set: {'traffic':(data.traffic +1)}}, {multi: false});
                 }else{
-
                     //create an instance for the day
                     TrafficM.create({'date':currentDate, 'traffic': 1});
                 }

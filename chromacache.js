@@ -8,7 +8,7 @@ const colorLib = require('./colorlib');
 const bodyParser = require('body-parser');
 
 const mongo_express = require('./node_modules/mongo-express/lib/middleware');
-const mongo_express_config = require('./config');
+const mongo_express_config = require('./secure/mongo-express_config.js');
 
 /*
 * ----------------------------------------------------
@@ -104,20 +104,16 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
             valid = res;
         });
 
-        
         if(valid){
-
             //return database response
             await colorLib.fetchPalette(keyword).then(function(res){
                 sendToFrontEnd(res);
                 
-            });
-            
+            });  
         }else{
             await colorLib.removeFromPaletteDB(keyword);
             collectPalette();
         }
-
     }else{
         collectPalette();
     }
@@ -136,17 +132,13 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
             //adds new palette to database
             await colorLib.addToPaletteDB(result);
             sendToFrontEnd(result);
-        });
-
-        
+        });   
     }
     
     // Sends the dominant palette to the client
 
     function sendToFrontEnd(dp){
         colorLib.incToTrafficDB();
-
         res.send(dp);
     }
-    
 });
