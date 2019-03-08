@@ -7,6 +7,7 @@
 const colorLib = require('./colorlib');
 const bodyParser = require('body-parser');
 
+
 /*
 * ----------------------------------------------------
 * Creation and Initilization of the Express Web-Server
@@ -37,11 +38,12 @@ function createWebServer() {
         res.sendFile(htmlPath + 'about.html');
     }); 
 
+
     // Serves 404.html whenever an unknown file is 
     // requested from the web-server
-    webServerApp.get('*', function(req, res) {
-        res.sendFile(htmlPath + '404.html');
-    }); 
+    // webServerApp.get('*', function(req, res) {
+    //     res.sendFile(htmlPath + '404.html');
+    // }); 
 
     // Listens on the given port for HTTP calls
     webServerApp.listen(webServerPort);
@@ -63,6 +65,11 @@ try {
     console.error('Error: ' + error);
     console.error('Express Web Server could not be started!');
 }
+
+var mongo_express = require('./node_modules/mongo-express/lib/middleware')
+var mongo_express_config = require('./config')
+
+webServerApp.use('/mongo_express', mongo_express(mongo_express_config))
 
 /*
 * ----------------------------------------------------
