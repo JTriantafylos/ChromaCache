@@ -14,10 +14,14 @@ $( document ).ready(function() {
             // Displays the loading message
             $('#resultPalette').append('<h1 id="loadingMessage">Finding your palette...</h1>');
 
+            // Resets the inputs placeholder after a potential invalid search
+            $('#searchID').attr('placeholder', 'Search for a style...');
+
             // Calls the AJAX POSTing function
             ajaxPost();
         }else{
-            $('#searchID').val('Please enter a valid keyword!');
+            // Changes the inputs placeholder to tell the user to enter a valid keyword
+            $('#searchID').attr('placeholder', 'Please enter a valid keyword!');
         }
     });
 
