@@ -8,7 +8,7 @@ const colorLib = require('./colorlib');
 const bodyParser = require('body-parser');
 
 const mongo_express = require('./node_modules/mongo-express/lib/middleware');
-const mongo_express_config = require('./secure/mongo-express_config');
+const mongo_express_config = require('./config');
 
 /*
 * ----------------------------------------------------
@@ -80,7 +80,11 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     // Turns search keyword to lowercase
     var keyword = req.body.value.toLowerCase();
     
+    //checks if the user is in the database
     await colorLib.isUser(req.ip).then(async function(res){
+
+        //if is in database, increase the usages and add keyword to Searched
+        //otherwise, create new user
         if(res){
             await colorLib.incUserDB(req.ip, keyword);
              

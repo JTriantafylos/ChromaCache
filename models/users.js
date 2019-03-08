@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-
+let Searches = require('./../colorlib');
 
 let userSchema = mongoose.Schema({
         firstDate:{
@@ -10,16 +10,16 @@ let userSchema = mongoose.Schema({
                 type:[Number],
                 require:true
         },
+        searched:{
+                type:Searches,
+                require:true
+        },
         user:{
                 type:String,
                 require:true
         },
         usages:{
                 type:Number,
-                require:true
-        },
-        searched:{
-                type:[String],
                 require:true
         }
 });

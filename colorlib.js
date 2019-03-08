@@ -91,7 +91,16 @@ class Palette{
         return outp;      
     }
 }
+class Searches{
+    constructor(keywords){
+        this.keywords = keywords;
+    }
 
+    addKeyWord(keyword){
+        this.keywords.push(keyword);
+    }
+
+}
 
 module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
@@ -176,14 +185,14 @@ module.exports = {
         
         //getting date of search
         var date = new Date();
-        var d = [];
-        d.push(date.getMonth()+1);
-        d.push(date.getUTCFullYear());
+        var currentDate = [];
+        currentDate.push(date.getMonth()+1);
+        currentDate.push(date.getUTCFullYear());
 
         //using the palette model from ./models/palette.js
         
         //saving palette to database and giving a success responce
-        PaletteM.create({date:d, palette: palette})
+        PaletteM.create({date:currentDate, palette: palette})
             .catch(function(err){
                 console.error('unsuccessful: ' + '\n' + err);
             });
@@ -192,6 +201,7 @@ module.exports = {
     },
     removeFromPaletteDB: function(key){
 
+        //searches and deletes from palette
         PaletteM.deleteOne({ 'palette.keyword': key })
             .catch(function(err){
                 console.error('unsuccessful: ' + '\n' + err);
@@ -200,22 +210,24 @@ module.exports = {
 
 
     fetchPalette: async function(key){
-        var pal;
+        var returnedPalette;
         
         //fetching palette from the database
         await PaletteM.find({ 'palette.keyword': key })
             .then(function(palette){       
                 palette.forEach(function(data){
                     //getting all the color values in the palette
-                    pal =  (data.palette);
+                    returnedPalette =  (data.palette);
                 });
             }).catch(function(err){
                 console.error('error fetching palettes: ' + err);
             });
-        return pal;   
+        return returnedPalette;   
     },
 
     isStored: async function(key){
+
+        //counts occurrences for the palette
         var count = await PaletteM.countDocuments({ 'palette.keyword': key });
         if(count == 0){
             return false;
@@ -232,15 +244,15 @@ module.exports = {
             
             //getting current date
             var date = new Date();
-            var d = [];
-            d.push(date.getMonth()+1);
-            d.push(date.getUTCFullYear());
+            var currentDate = [];
+            currentDate.push(date.getMonth()+1);
+            currentDate.push(date.getUTCFullYear());
 
             palette.forEach(function(data){
     
                 //comparing the dates
     
-                if(data.date[1] == d[1] && data.date[0] == d[0]){
+                if(JSON.stringify(data.date) == JSON.stringify(currentDate)){
                     
                     valid = true;
                 }else{
@@ -251,6 +263,8 @@ module.exports = {
         }).catch(function(err){
             console.error('error checking validity: ' + err);
         });
+
+
         return valid;
 
     },
@@ -265,6 +279,8 @@ module.exports = {
         return p;
     },
     isUser: async function(user){
+
+        //counts occurrences for the user
         var count = await UsersM.countDocuments({ 'user': user });
         if(count == 0){
             return false;
@@ -273,13 +289,16 @@ module.exports = {
         }
     },
     addToUserDB: function(user, keyword){
-        var date = new Date();
-        var d = [];
-        d.push(date.getDate());
-        d.push(date.getMonth()+1);
-        d.push(date.getUTCFullYear());
 
-        UsersM.create({firstDate:d, latestDate:d, user: user, usages: 1, searched: [keyword]})
+        //creates new user with given fields
+        var date = new Date();
+        var currentDate = [];
+        currentDate.push(date.getDate());
+        currentDate.push(date.getMonth()+1);
+        currentDate.push(date.getUTCFullYear());
+
+
+        UsersM.create({firstDate:currentDate, latestDate:currentDate, searched: new Searches([keyword]), user: user, usages: 1})
         .catch(function(err){
             console.log('unsuccessful: ' + '\n' + err);
         });
@@ -288,23 +307,42 @@ module.exports = {
 
     },
     incUserDB: async function(user, keyword){
+
+        //gets current date
         var date = new Date();
-        var d = [];
-        d.push(date.getDate());
-        d.push(date.getMonth()+1);
-        d.push(date.getUTCFullYear());
+        var currentDate = [];
+        currentDate.push(date.getDate());
+        currentDate.push(date.getMonth()+1);
+        currentDate.push(date.getUTCFullYear());
        
-        await UsersM.find({'user':user}).then(function(res){
+        //looks for user
+        await UsersM.find({'user':user}).then(function(userRecord){
             
-            res.forEach(async function(ret){
-                var temp = ret.searched;
-                temp.push(keyword);
-                if(JSON.stringify(ret.latestDate) == JSON.stringify(d)){
-                
-                    await UsersM.updateOne({'user':user},{$set: {'usages':(ret.usages +1), 'searched':temp}}, {multi: true});
+            //checks for the current words held in the user records
+            userRecord.forEach(async function(data){
+                var temp = data.searched.keywords;
+                var counter = 0; 
+                await temp.forEach(function(searches){
+
+                    if(searches == keyword){
+                        counter ++;
+                    }
+                });
+
+                //means the key words has not yet been searched
+                if(counter == 0){
+                    temp.push(keyword);
+                }
+
+                //comparing current date to the last recorded date
+                if(JSON.stringify(data.latestDate) == JSON.stringify(currentDate)){
+                    
+                    //adds keyword to searched keywords and updates the usages
+                    await UsersM.updateOne({'user':user},{$set: {'usages':(data.usages +1),'searched':new Searches(temp)}}, {multi: true});
                 }else{
                     
-                    await UsersM.updateOne({'user':user},{$set: {'latestDate':d, 'searched':temp}}, {multi: true});
+                    //only adds the keyword(meaning the search was on same day as last day used)
+                    await UsersM.updateOne({'user':user},{$set: {'latestDate':currentDate, 'searched':new Searches(temp)}}, {multi: true});
                 }
             });      
         }).catch(function(err){
@@ -314,20 +352,30 @@ module.exports = {
 
     incToTrafficDB: async function(){
         var date = new Date();
-        var d = [];
-        d.push(date.getDate());
-        d.push(date.getMonth()+1);
-        d.push(date.getUTCFullYear());
+        var currentDate = [];
+        currentDate.push(date.getDate());
+        currentDate.push(date.getMonth()+1);
+        currentDate.push(date.getUTCFullYear());
     
-        await TrafficM.find({'date':d}).then(function(res){
-            if(res.length == 0){
-                TrafficM.create({'date':d, 'traffic': 1});
+        await TrafficM.find({'date':currentDate}).then(function(traffic){
+
+            //checking to see if there has been any traffic
+            if(traffic.length == 0){
+                
+                //if there is no traffic, create an instance for the day
+                TrafficM.create({'date':currentDate, 'traffic': 1});
             }
-            res.forEach(async function(ret){  
-                if(JSON.stringify(ret.date) == JSON.stringify(d)){
-                    await TrafficM.updateOne({'date':d},{$set: {'traffic':(ret.traffic +1)}}, {multi: false});
+            traffic.forEach(async function(data){  
+
+                //checks again to see if there was traffic on that day
+                if(JSON.stringify(data.date) == JSON.stringify(currentDate)){
+                    
+                    //increases how much traffic
+                    await TrafficM.updateOne({'date':currentDate},{$set: {'traffic':(data.traffic +1)}}, {multi: false});
                 }else{
-                    TrafficM.create({'date':d, 'traffic': 1});
+
+                    //create an instance for the day
+                    TrafficM.create({'date':currentDate, 'traffic': 1});
                 }
             });
         }).catch(function(err){
