@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let Palette = require('./../colorlib');
+
 let paletteSchema = mongoose.Schema({
     palette: {
         type: Palette,
@@ -13,4 +14,10 @@ let paletteSchema = mongoose.Schema({
         
 });
 
+
+
+
+
 let PaletteM = module.exports = mongoose.model('palettes', paletteSchema);
+
+

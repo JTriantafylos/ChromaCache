@@ -24,6 +24,13 @@ db.on('error', function(err){
 //bring in palette model
 let PaletteM = require('./models/palette');
 
+//bring in traffic model
+let TrafficM = require('./models/traffic');
+
+//bring in users model
+let UsersM = require('./models/users');
+
+
 //api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
 //srch_eng_id = "012928527837730696752:wzqnawdyxwc"
 
@@ -173,12 +180,12 @@ module.exports = {
         return  dominantPalette;
     },
 
-    addToDB: function (palette){
+    addToPaletteDB: function (palette){
         
         //getting date of search
         var date = new Date();
         var d = [];
-        d.push(date.getUTCMonth()+1);
+        d.push(date.getMonth()+1);
         d.push(date.getUTCFullYear());
 
         //using the palette model from ./models/palette.js
@@ -191,7 +198,7 @@ module.exports = {
 
 
     },
-    removeFromDB: function(key){
+    removeFromPaletteDB: function(key){
 
         PaletteM.deleteOne({ "palette.keyword": key })
         .catch(function(err){
@@ -244,7 +251,7 @@ module.exports = {
             //getting current date
             var date = new Date();
             var d = [];
-            d.push(date.getUTCMonth()+1);
+            d.push(date.getMonth()+1);
             d.push(date.getUTCFullYear());
                 
 
@@ -277,12 +284,89 @@ module.exports = {
         //using palette class
         var p = new Palette(keyword, colors);
         return p;
+    },
+    isUser: async function(user){
+        var count = await UsersM.countDocuments({ 'user': user });
+        if(count == 0){
+            return false;
+        }else{
+            return true;
+        }
+    },
+    addToUserDB: function(user){
+        var date = new Date();
+        var d = [];
+        d.push(date.getDate());
+        d.push(date.getMonth()+1);
+        d.push(date.getUTCFullYear());
+
+        UsersM.create({firstDate:d, latestDate:d, user: user, usages: 1})
+        .catch(function(err){
+            console.log('unsuccessful: ' + '\n' + err);
+        });
+        
+
+
+    },
+    incUserDB: async function(user){
+        var date = new Date();
+        var d = [];
+        d.push(date.getDate());
+        d.push(date.getMonth()+1);
+        d.push(date.getUTCFullYear());
+    
+       
+        await UsersM.find({'user':user}).then(function(res){
+            
+            res.forEach(async function(ret){
+                
+                if(JSON.stringify(ret.latestDate) == JSON.stringify(d)){
+                
+                    await UsersM.updateOne({'user':user},{$set: {'usages':(ret.usages +1)}}, {multi: false});
+                }else{
+                    
+                    await UsersM.updateOne({'user':user},{$set: {'latestDate':d}}, {multi: false});
+                }
+            });
+            
+            
+        }).catch(function(err){
+            console.log('error updating traffic: ' + err);
+        });
+
+       
+    },
+    incToTrafficDB: async function(){
+        var date = new Date();
+        var d = [];
+        d.push(date.getDate());
+        d.push(date.getMonth()+1);
+        d.push(date.getUTCFullYear());
+    
+       
+        await TrafficM.find({'date':d}).then(function(res){
+            
+            
+            if(res.length == 0){
+                TrafficM.create({'date':d, 'traffic': 1});
+            }
+            res.forEach(async function(ret){
+                
+                if(JSON.stringify(ret.date) == JSON.stringify(d)){
+                    await TrafficM.updateOne({'date':d},{$set: {'traffic':(ret.traffic +1)}}, {multi: false});
+                }else{
+                    
+                    TrafficM.create({'date':d, 'traffic': 1});
+                }
+            });
+            
+            
+        }).catch(function(err){
+            console.log('error updating traffic: ' + err);
+        });
+
+       
     }
-
-
 
 };
         
-        
-        
- 

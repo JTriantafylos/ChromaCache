@@ -73,6 +73,15 @@ try {
 webServerApp.post('/api/clientMessage', async function (req, res) {
     // Turns search keyword to lowercase
     var keyword = req.body.value.toLowerCase();
+    
+    await colorLib.isUser(req.ip).then(async function(res){
+        if(res){
+            await colorLib.incUserDB(req.ip);
+             
+        }else{
+            await colorLib.addToUserDB(req.ip);
+        }
+    });
 
     //check if keyword is in database
     var stored;
@@ -87,6 +96,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         await colorLib.isValid(keyword).then(function(res){
             valid = res;
         });
+
         
         if(valid){
 
@@ -97,7 +107,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
             });
             
         }else{
-            await colorLib.removeFromDB(keyword);
+            await colorLib.removeFromPaletteDB(keyword);
             collectPalette();
         }
 
@@ -117,7 +127,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         // Calling the fetch dominant palette from color library
         await colorLib.fetchDominantColorPalette(keyword, imageLinks).then( async function (result) {
             //adds new palette to database
-            await colorLib.addToDB(result);
+            await colorLib.addToPaletteDB(result);
             sendToFrontEnd(result);
         });
 
@@ -127,6 +137,8 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     // Sends the dominant palette to the client
 
     function sendToFrontEnd(dp){
+        colorLib.incToTrafficDB();
+
         res.send(dp);
     }
     
