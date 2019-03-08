@@ -83,15 +83,12 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         }
     });
 
-    //check if keyword is in database
+    // Check if keyword is in palette database
     var stored;
-    await colorLib.isStored(keyword).then(function(res){
-        stored = res;
-    });
+    await colorLib.isStored(keyword).then(result => stored = result);
 
     if(stored){
-        
-        //check if palette is valid
+        // Check if palette stored in the database is valid (Less than 1 month old)
         var valid;
         await colorLib.isValid(keyword).then(function(res){
             valid = res;
