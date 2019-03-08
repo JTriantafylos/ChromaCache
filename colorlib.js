@@ -293,14 +293,14 @@ module.exports = {
             return true;
         }
     },
-    addToUserDB: function(user){
+    addToUserDB: function(user, keyword){
         var date = new Date();
         var d = [];
         d.push(date.getDate());
         d.push(date.getMonth()+1);
         d.push(date.getUTCFullYear());
 
-        UsersM.create({firstDate:d, latestDate:d, user: user, usages: 1})
+        UsersM.create({firstDate:d, latestDate:d, user: user, usages: 1, searched: [keyword]})
         .catch(function(err){
             console.log('unsuccessful: ' + '\n' + err);
         });
@@ -308,7 +308,7 @@ module.exports = {
 
 
     },
-    incUserDB: async function(user){
+    incUserDB: async function(user, keyword){
         var date = new Date();
         var d = [];
         d.push(date.getDate());
@@ -319,13 +319,14 @@ module.exports = {
         await UsersM.find({'user':user}).then(function(res){
             
             res.forEach(async function(ret){
-                
+                var temp = ret.searched;
+                temp.push(keyword);
                 if(JSON.stringify(ret.latestDate) == JSON.stringify(d)){
                 
-                    await UsersM.updateOne({'user':user},{$set: {'usages':(ret.usages +1)}}, {multi: false});
+                    await UsersM.updateOne({'user':user},{$set: {'usages':(ret.usages +1), 'searched':temp}}, {multi: true});
                 }else{
                     
-                    await UsersM.updateOne({'user':user},{$set: {'latestDate':d}}, {multi: false});
+                    await UsersM.updateOne({'user':user},{$set: {'latestDate':d, 'searched':temp}}, {multi: true});
                 }
             });
             

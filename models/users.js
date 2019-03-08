@@ -17,6 +17,10 @@ let userSchema = mongoose.Schema({
         usages:{
                 type:Number,
                 require:true
+        },
+        searched:{
+                type:[String],
+                require:true
         }
 });
 

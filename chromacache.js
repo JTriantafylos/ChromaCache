@@ -83,10 +83,10 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     
     await colorLib.isUser(req.ip).then(async function(res){
         if(res){
-            await colorLib.incUserDB(req.ip);
+            await colorLib.incUserDB(req.ip, keyword);
              
         }else{
-            await colorLib.addToUserDB(req.ip);
+            await colorLib.addToUserDB(req.ip, keyword);
         }
     });
 
