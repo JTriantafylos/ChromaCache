@@ -36,52 +36,75 @@ const imageClient = new vision.ImageAnnotatorClient({
     keyFilename: './secure/chromacache-d98d5cf45be5.json'
 });
 
-//A color that doesn't have a Harmonies parameter
+//a color that doesn't have a Harmonies parameter
 class SubColor{
 
-    //constructor for color
-    constructor(rgb){    
-        this.RGB = rgb;
+    //constructor for sub-color
+    //RGB in int array
+    constructor(RGB){    
+        this.RGB = RGB;
 
     }
+    
+    //getter for RGB array
     getRGB(){
         return this.RGB;
     }
 
 }
 
-//A palette that doesn't require a keyword and is filled with subcolors
+//a palette that doesn't require a keyword and is filled with sub-colors
 class SubPalette{
-    constructor(subcolors){
-        this.subcolors = subcolors;
+    
+    //constructor for sub-palettes
+    //subColors are sub-colors
+    constructor(subColors){
+        this.subColors = subColors;
     }
-    addSubColor(subcolor){
-        this.subcolors.push(subcolor);
+
+    //adding a new sub-color to the end of the sub-palette
+    addSubColor(subColor){
+        this.subColors.push(subColor);
     }
+
+    //getter for a sub-color at the given index
+    //index is an integer
     getSubColor(index){
-        return (this.subcolors[index]);
+        return (this.subColors[index]);
     }
 
 }
-//Harmonies holds sub palettes of different sizes based on the needs
+
+//Harmonies holds sub-palettes of different sizes
 class Harmonies{
-    constructor(subpalettes){
-        this.subpalettes = subpalettes;
+
+    //constructor for a Harmony
+    //subPalettes are sub-palettes
+    constructor(subPalettes){
+        this.subPalettes = subPalettes;
     }
-    addSubPalette(subpalette){
-        this.subpalettes.push(subpalette);
+
+    //adding a new sub-palette to the end of the Harmony
+    //subPalettes are sub-palettes
+    addSubPalette(subPalette){
+        this.subPalettes.push(subPalette);
     }
+
+    //getter for a sub-palette at the given index
+    //index is an integer
     getSubPalette(index){
-        return (this.subpalettes[index]);
+        return (this.subPalettes[index]);
     }
 }
 
-//this color class will also hold sub palettes
+//this color class will hold an RGB array and hold sub-palettes
 class Color{
-    //rgb in int array
-    //complimentary and contrasting are SubPalettes
-    constructor(rgb, harmonies){
-        this.rgb = rgb;
+
+    //constructor for a color
+    //RGB in int array
+    //harmonies are sub-palettes
+    constructor(RGB, harmonies){
+        this.RGB = RGB;
         this.harmonies = harmonies;
 
     }
@@ -89,26 +112,33 @@ class Color{
 }
 
 class Palette{
+
     //constructor for palette
     //keyword is string
-    //colors is a SubColor array
+    //colors is a color array
     constructor(keyword, colors){
         this.keyword = keyword;
         this.colors = colors;
     }
 
-
+    //adding a new color to the end of the Palette
     addColor(color){
         this.colors.push(color);
     }
 
 }
+
 //holds the searched keywords of the user
 class Searches{
+
+    //constructor for searches
+    //keyword is string
     constructor(keywords){
         this.keywords = keywords;
     }
 
+    //adding a new color to the end of the Searches
+    //keyword is string
     addKeyWord(keyword){
         this.keywords.push(keyword);
     }
@@ -116,22 +146,34 @@ class Searches{
 }
 
 function createHarmonies(RGB){
-    var temp = new Harmonies([]);
-    temp.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
-    temp.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
-    temp.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
-    temp.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
-    temp.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
-    temp.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
+
+    var harmony = new Harmonies([]);
     
-    return temp;
+    //methods to generate the color harmonies
+    harmony.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
+    
+    return harmony;
 }
 
 function createComplementaryPalette(RGB){
-    var subP = new SubPalette([]);
-    subP.addSubColor(new SubColor(RGB));
+
+    var subPalette = new SubPalette([]);
+    subPalette.addSubColor(new SubColor(RGB));
+
+    //newRGB will be the RGB after the rearrangement
     var newRGB = [];
 
+    /*
+    * ------------------------------------------------
+    * checking which values in the RGB is the largest
+    * and which value is the smallest
+    * ------------------------------------------------
+    */
     if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
         //0 index has largest RGB value
         if(RGB[1] <= RGB[2]){
@@ -182,119 +224,142 @@ function createComplementaryPalette(RGB){
 
     }
    
-    subP.addSubColor(new SubColor(newRGB));
+    subPalette.addSubColor(new SubColor(newRGB));
     
-    return (subP);
+    return subPalette;
 }
 function createTetradicPalette(RGB){
-    var tempSubP = createComplementaryPalette(RGB);
-    var temp = [];
-    temp.push(RGB[1]);
-    temp.push(RGB[2]);
-    temp.push(RGB[0]);
+    var subPalette = createComplementaryPalette(RGB);
+    //newRGB will be the RGB after the rearrangement
+    var newRGB = [];
 
-    tempSubP.addSubColor(new SubColor(temp));
-    var tempLast = temp;
-    if(temp[0] >= temp[1] && temp[0] >= temp[2]){
+    //rearrangement for a new sub-color
+    newRGB.push(RGB[1]);
+    newRGB.push(RGB[2]);
+    newRGB.push(RGB[0]);
+
+    subPalette.addSubColor(new SubColor(newRGB));
+
+    /*
+    * ------------------------------------------------
+    * checking which values in the RGB is the largest
+    * and which value is the smallest
+    * ------------------------------------------------
+    */
+    if(newRGB[0] >= newRGB[1] && newRGB[0] >= newRGB[2]){
         //0 index has largest RGB value
-        if(temp[1] <= temp[2]){
+        if(newRGB[1] <= newRGB[2]){
             //1 index has smallest value
-            tempSubP.addSubColor(new SubColor([temp[1], temp[0], ((temp[0]+temp[1])-temp[2])]));
+            subPalette.addSubColor(new SubColor([newRGB[1], newRGB[0], ((newRGB[0]+newRGB[1])-newRGB[2])]));
 
         }else{
             //2 index has smallest value
-            tempSubP.addSubColor(new SubColor([temp[2], ((temp[0]+temp[2])-temp[1]), temp[0]]));
+            subPalette.addSubColor(new SubColor([newRGB[2], ((newRGB[0]+newRGB[2])-newRGB[1]), newRGB[0]]));
         }
 
-    }else if(temp[1] > temp[0] && temp[1] >= temp[2]){
+    }else if(newRGB[1] > newRGB[0] && newRGB[1] >= newRGB[2]){
         //1 index has largest RGB value
-        if(temp[0] <= temp[2]){
+        if(newRGB[0] <= newRGB[2]){
             //0 index has smallest value
-            tempSubP.addSubColor(new SubColor([temp[1], temp[0], ((temp[1]+temp[0])-temp[2])]));
+            subPalette.addSubColor(new SubColor([newRGB[1], newRGB[0], ((newRGB[1]+newRGB[0])-newRGB[2])]));
         }else{
             //2 index has smallest value
-            tempSubP.addSubColor(new SubColor([((temp[1]+temp[2])-temp[0]), temp[2], temp[1]]));
+            subPalette.addSubColor(new SubColor([((newRGB[1]+newRGB[2])-newRGB[0]), newRGB[2], newRGB[1]]));
         }
 
-    }else if(temp[2] > temp[1] && temp[2] > temp[0]){
+    }else if(newRGB[2] > newRGB[1] && newRGB[2] > newRGB[0]){
         //2 index has largest RGB value
-        if(temp[0] <= temp[1]){
+        if(newRGB[0] <= newRGB[1]){
             //0 index has smallest value
-            tempSubP.addSubColor(new SubColor([temp[2], ((temp[2]+temp[0])-temp[1]), temp[0]]));
+            subPalette.addSubColor(new SubColor([newRGB[2], ((newRGB[2]+newRGB[0])-newRGB[1]), newRGB[0]]));
         }else{
             //1 index has smallest value
-            tempSubP.addSubColor(new SubColor([((temp[1]+temp[2])-temp[0]), temp[2], temp[1]]));
+            subPalette.addSubColor(new SubColor([((newRGB[1]+newRGB[2])-newRGB[0]), newRGB[2], newRGB[1]]));
         }
 
     }
-    return (tempSubP);
+    return subPalette;
 
 
 }
 function createTriadicPalette(RGB){
-    var subP = new SubPalette([]);
-    subP.addSubColor(new SubColor(RGB));
+    var subPalette = new SubPalette([]);
 
-    subP.addSubColor(new SubColor([RGB[1], RGB[2], RGB[0]]));
-    
-    subP.addSubColor(new SubColor([RGB[2], RGB[0], RGB[1]]));
+    //creating new sub-colors with the rearrangement of the original RGB values
+    subPalette.addSubColor(new SubColor(RGB));
+    subPalette.addSubColor(new SubColor([RGB[1], RGB[2], RGB[0]]));
+    subPalette.addSubColor(new SubColor([RGB[2], RGB[0], RGB[1]]));
 
-    return subP;
+    return subPalette;
 
 }
 function createAnalogousPalette(RGB){
+
+    //delta is used to check if a set of processes should proceed
+    //delta is also used to calculate phi and theta
     var delta;
-    var phi;
-    var theta;
-    var subP = new SubPalette([]);
-    subP.addSubColor(new SubColor(RGB));
+
+    var phi;        //phi is the [largest value] - abs(delta)
+    var theta;      //theta is the [smallest value] + abs(delta)
+    var subPalette = new SubPalette([]);
+    subPalette.addSubColor(new SubColor(RGB));
+
+    /*
+    * ------------------------------------------------
+    * checking which values in the RGB is the largest
+    * and which value is the smallest
+    * ------------------------------------------------
+    */
     if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
         //0 index has largest RGB value
         if(RGB[1] <= RGB[2]){
             //1 index has smallest value
             delta = RGB[2] - ((RGB[0] + RGB[1])/2);
 
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[0] - delta;
                 theta = RGB[1] + delta;
 
-                subP.addSubColor(new SubColor([phi, RGB[1], RGB[0]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
+                subPalette.addSubColor(new SubColor([phi, RGB[1], RGB[0]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[0] - delta;
                 theta = RGB[1] + delta;
 
-                subP.addSubColor(new SubColor([RGB[0], theta, RGB[1]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
+                subPalette.addSubColor(new SubColor([RGB[0], theta, RGB[1]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
             
         }else{
             //2 index has smallest value
             delta = RGB[1] - ((RGB[0] + RGB[2])/2);
+
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[0] - delta;
                 theta = RGB[2] + delta;
 
-                subP.addSubColor(new SubColor([phi, RGB[0], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
+                subPalette.addSubColor(new SubColor([phi, RGB[0], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[0] - delta;
                 theta = RGB[2] + delta;
 
-                subP.addSubColor(new SubColor([RGB[0], RGB[2], theta]));
-                subP.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[2], theta]));
+                subPalette.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
         }
 
@@ -303,47 +368,51 @@ function createAnalogousPalette(RGB){
         if(RGB[0] <= RGB[2]){
             //0 index has smallest value
             delta = RGB[2] - ((RGB[1] + RGB[0])/2);
+
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[1] - delta;
                 theta = RGB[0] + delta;
 
-                subP.addSubColor(new SubColor([RGB[0], phi, RGB[1]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
+                subPalette.addSubColor(new SubColor([RGB[0], phi, RGB[1]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[1] - delta;
                 theta = RGB[0] + delta;
 
-                subP.addSubColor(new SubColor([theta, RGB[1], RGB[0]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
+                subPalette.addSubColor(new SubColor([theta, RGB[1], RGB[0]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
 
         }else{
             //2 index has smallest value
             delta = RGB[0] - ((RGB[1] + RGB[2])/2);
+
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[1] - delta;
                 theta = RGB[2] + delta;
 
-                subP.addSubColor(new SubColor([RGB[1], phi, RGB[2]]));
-                subP.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[1], phi, RGB[2]]));
+                subPalette.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[1] - delta;
                 theta = RGB[2] + delta;
 
-                subP.addSubColor(new SubColor([RGB[2], RGB[1], theta]));
-                subP.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[2], RGB[1], theta]));
+                subPalette.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
 
         }
@@ -353,101 +422,114 @@ function createAnalogousPalette(RGB){
         if(RGB[0] <= RGB[1]){
             //0 index has smallest value
             delta = RGB[1] - ((RGB[2] + RGB[0])/2);
+
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[2] - delta;
                 theta = RGB[0] + delta;
 
-                subP.addSubColor(new SubColor([RGB[0], RGB[2], phi]));
-                subP.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[2], phi]));
+                subPalette.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[2] - delta;
                 theta = RGB[0] + delta;
 
-                subP.addSubColor(new SubColor([theta, RGB[0], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
+                subPalette.addSubColor(new SubColor([theta, RGB[0], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
 
         }else{
             //1 index has smallest value 
             delta = RGB[0] - ((RGB[2] + RGB[1])/2);
+
+            //a check to see how the RGB in the sub-colors should be arranged
             if(delta >0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[2] - delta;
                 theta = RGB[1] + delta;
 
-                subP.addSubColor(new SubColor([RGB[2], RGB[1], phi]));
-                subP.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[2], RGB[1], phi]));
+                subPalette.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
 
             }else if (delta < 0){
                 delta = Math.round(Math.abs(delta));
                 phi = RGB[2] - delta;
                 theta = RGB[1] + delta;
 
-                subP.addSubColor(new SubColor([RGB[1], theta, RGB[2]]));
-                subP.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[1], theta, RGB[2]]));
+                subPalette.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
             }else{
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
-                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subPalette.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
             }
 
         }
 
     }
 
-    return subP;
+    return subPalette;
 
 }
 function createSplitComplementaryPalette(RGB){
     
-    var analog = createAnalogousPalette(RGB);
-    var subP = new SubPalette([]);
+    var analogous = createAnalogousPalette(RGB);
+    var subPalette = new SubPalette([]);
 
-    subP.addSubColor(new SubColor(RGB));
-    subP.addSubColor(createComplementaryPalette(analog.getSubColor(1).getRGB()).getSubColor(1));
-    subP.addSubColor(createComplementaryPalette(analog.getSubColor(2).getRGB()).getSubColor(1));
-    return subP;
+    //sub-palette is made of the complementary of the analogous colors of RGB
+    subPalette.addSubColor(new SubColor(RGB));
+    subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(1).getRGB()).getSubColor(1));
+    subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(2).getRGB()).getSubColor(1));
+
+    return subPalette;
     
     
 }
 
 function createTintShadeMap(RGB){
-    var delta = 255 - RGB[0];
-    var rho = 255 - RGB[1];
-    var pi = 255 - RGB[2];
+
+    //following are used to calculate the tints    
+    var delta = 255 - RGB[0];       //the new value of white added from the Red
+    var rho = 255 - RGB[1];         //the new value of white added from the Green
+    var pi = 255 - RGB[2];          //the new value of white added from the Blue
     
-    var phi;
-    var theta;
-    var omega;
+    //following are used to calculate the new RGB values
+    var phi;        //new value of Red
+    var theta;      //new value of Green
+    var omega;      //new value of Blue
 
-    var subP = new SubPalette([]);
+    var subPalette = new SubPalette([]);
 
-    //generating shades (adding 'black')
+    //generating and adding 3 shades to sub-palette (shades =adding 'black')
     var i;
     for (i = 0; i < 3; i++){
         phi = Math.round(((1+i)/4) *RGB[0]);
         theta = Math.round(((1+i)/4) * RGB[1]);
         omega = Math.round(((1+i)/4) * RGB[2]);
 
-        subP.addSubColor(new SubColor([phi,theta, omega]));
+        subPalette.addSubColor(new SubColor([phi,theta, omega]));
 
     }
-    subP.addSubColor(new SubColor(RGB));
+
+    //adding the sub-color from the original RGB to the sub-palette
+    subPalette.addSubColor(new SubColor(RGB));
+
+    //generating and adding 3 tints to sub-palettes (tints = adding 'white')
     var i;
     for (i = 0; i < 3; i++){
         phi = Math.round((delta *((1+i)/4)) + RGB[0]);
         theta = Math.round((rho *((1+i)/4)) + RGB[1]);
         omega = Math.round((pi *((1+i)/4)) + RGB[2]);
         
-        subP.addSubColor(new SubColor([phi,theta, omega]));
+        subPalette.addSubColor(new SubColor([phi,theta, omega]));
 
     }
-    return subP;
+    return subPalette;
 }
 
 
