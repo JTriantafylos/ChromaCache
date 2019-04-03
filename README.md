@@ -25,7 +25,12 @@ See us at [ChromaCache](chromacache.com)!
 - [x] Create a colour palette database
 - [x] Implement libraries and database
 - [x] Create a frequency handler in database
+- [x] Create color harmonies generator
 - [ ] Implement palette choice
 - [ ] Implement HTTPS into Express web server
+- [ ] Write about page
+- [x] Create frequently searched (google) palettes
+- [ ] Create RGB/HEX search page
+- [ ] create database for RGB/HEX page
 
  Created **James Triantafylos (@JTriantafylos)** & **Eyas Valdez (@SpiltBeans)**.

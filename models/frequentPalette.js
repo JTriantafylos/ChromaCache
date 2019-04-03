@@ -1,10 +1,14 @@
 let mongoose = require('mongoose');
 let Palette = require('./../colorlib');
 
-let paletteSchema = mongoose.Schema({
-    date:{
+let frequencySchema = mongoose.Schema({
+    date_added:{
         type: [Number],
         require: true
+    },
+    date_latest:{
+            type:[Number],
+            require:true
     },
     palette: {
         type: Palette,
@@ -22,6 +26,6 @@ let paletteSchema = mongoose.Schema({
 
 
 
-let PaletteM = module.exports = mongoose.model('palettes', paletteSchema);
+let FrequencyM = module.exports = mongoose.model('frequency', frequencySchema);
 
 

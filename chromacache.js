@@ -107,11 +107,13 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
         
         if(valid){
 
+            colorLib.incPaletteDB(keyword);
             //return database response
             await colorLib.fetchPalette(keyword).then(function(res){
                 sendToFrontEnd(res);
                 
             });
+            
             
         }else{
             await colorLib.removeFromPaletteDB(keyword);
@@ -144,8 +146,10 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     // Sends the dominant palette to the client
 
     function sendToFrontEnd(dp){
-        colorLib.incToTrafficDB();
-
+        colorLib.incTrafficDB();
+        colorLib.updateFrequentDb(dp);
+        //var fdb = colorLib.getFrequentDB();
+        //res.sent([dp, fdb]);
         res.send(dp);
     }
     

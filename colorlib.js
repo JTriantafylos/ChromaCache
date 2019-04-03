@@ -29,7 +29,11 @@ db.on('error', function(err){
 let PaletteM = require('./models/palette');
 let TrafficM = require('./models/traffic');
 let UsersM = require('./models/users');
+let FrequencyM = require('./models/frequentPalette');
 
+//color harmony reference material
+//http://www.tigercolor.com/color-lab/color-theory/color-harmonies.htm
+//https://www.sessions.edu/color-calculator/
 
 // Creates a Google Vision image annotator client with the given service key
 const imageClient = new vision.ImageAnnotatorClient({
@@ -621,17 +625,141 @@ module.exports = {
         //getting date of search
         var date = new Date();
         var currentDate = [];
+        currentDate.push(date.getDate());
         currentDate.push(date.getMonth()+1);
         currentDate.push(date.getUTCFullYear());
 
         //using the palette model from ./models/palette.js
         
         //saving palette to database and giving a success responce
-        PaletteM.create({date:currentDate, palette: palette})
+        PaletteM.create({date:currentDate, palette: palette, searches:1})
             .catch(function(err){
                 console.error('unsuccessful: ' + '\n' + err);
             });
 
+
+    },
+    incPaletteDB: async function(key){
+        
+
+        await PaletteM.find({'palette.keyword': key}).then(function(paletteRecord){
+            
+            //parses through palette data
+            paletteRecord.forEach(async function(data){
+
+                //increasing the amount of searches for the palette
+                var searchesVal = data.searches;
+                await PaletteM.updateOne({'palette.keyword': key},{$set: {'searches':(searchesVal +1)}}, {multi: false});
+            });      
+        }).catch(function(err){
+            console.error('error updating palette: ' + err);
+        });
+
+    },
+    updateFrequentDb: async function(palette){
+        var count = await FrequencyM.countDocuments({ 'palette.keyword': palette.keyword });
+        var length = await FrequencyM.countDocuments();
+
+        var date = new Date();
+        var currentDate = [];
+        currentDate.push(date.getDate());
+        currentDate.push(date.getMonth()+1);
+        currentDate.push(date.getUTCFullYear());
+        if(length <10 && count == 0){
+
+            //if there are less than 10 entries in the frequency database
+            //just append the new palette to the end of the database
+            FrequencyM.create({date_added:currentDate, date_latest:currentDate, palette: palette, searches:1})
+                .catch(function(err){
+                    console.error('unsuccessful: ' + '\n' + err);
+                });
+        }else{
+            if(count == 0){
+            
+                //check to see if it can replace one;
+
+                //WIP
+                //check how many searches are in  palettedb
+                var searchesVal;
+                var searchesFVal = [];
+                await PaletteM.find({'palette.keyword': palette.keyword}).then(function(paletteRecord){
+                    
+                    //parses through palette data
+                    paletteRecord.forEach(async function(data){
+        
+                        //increasing the amount of searches for the palette
+                        searchesVal = data.searches;
+                    });      
+                }).catch(function(err){
+                    console.error('error: ' + err);
+                });
+
+                //check if the searches are now higher than the lowest in frequency
+                await FrequencyM.find().then(function(frequencyRecord){
+                        
+                    //parses through palette data
+                    frequencyRecord.forEach(async function(data){
+            
+                        //increasing the amount of searches for the palette
+                        searchesFVal.push(data.searches);
+                    });      
+                }).catch(function(err){
+                    console.error('error: ' + err);
+                });
+                var min = Math.min.apply(Math, searchesFVal);
+                var lowestVals = [];
+                await FrequencyM.find({'searches': min}).then(function(res){
+                    res.forEach(async function(data){
+            
+                        //collecting the amount of palettes with the same amount of searches
+                        lowestVals.push(data);
+                    });     
+                    
+                });
+
+                
+                if(searchesVal>min){
+                    //if true, remove lowest and add the new one
+
+
+                    //only use the first index, this also means that
+                    //if there are only one index, the first one wont cause errors
+                    FrequencyM.deleteOne({ 'palette.keyword':  lowestVals[0].palette.keyword })
+                    .catch(function(err){
+                        console.error('unsuccessful: ' + '\n' + err);
+                    });
+
+                    //add the new palette to frequent database
+                    FrequencyM.create({date_added:currentDate, date_latest:currentDate, palette: palette, searches:searchesVal})
+                    .catch(function(err){
+                        console.error('unsuccessful: ' + '\n' + err);
+                    });
+
+                }
+                    
+            }else{
+    
+               
+                //update the one already in there
+                await FrequencyM.find({'palette.keyword': palette.keyword}).then(function(frequencyRecord){
+                    
+                    //parses through palette data
+                    frequencyRecord.forEach(async function(data){
+        
+                        //increasing the amount of searches for the palette
+                        var searchesVal = data.searches;
+                        await FrequencyM.updateOne({'palette.keyword': palette.keyword},{$set: {'date_latest':currentDate, 'searches': searchesVal+1}}, {multi: true});
+                    });      
+                }).catch(function(err){
+                    console.error('error updating palette: ' + err);
+                });
+    
+            }
+        }
+        
+        
+    },
+    getFrequencyOrder:function(){
 
     },
     removeFromPaletteDB: function(key){
@@ -680,6 +808,7 @@ module.exports = {
             //getting current date
             var date = new Date();
             var currentDate = [];
+            currentDate.push(date.getDate());
             currentDate.push(date.getMonth()+1);
             currentDate.push(date.getUTCFullYear());
 
@@ -775,7 +904,7 @@ module.exports = {
         });
     },
 
-    incToTrafficDB: async function(){
+    incTrafficDB: async function(){
         var date = new Date();
         var currentDate = [];
         currentDate.push(date.getDate());
