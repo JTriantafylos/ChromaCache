@@ -81,7 +81,7 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
     var keyword = req.body.value.toLowerCase();
     
     //checks if the user is in the database
-    await colorLib.isUser(req.ip).then(async function(res){
+    await colorLib.isUserStored(req.ip).then(async function(res){
 
         //if is in database, increase the usages and add keyword to Searched
         //otherwise, create new user
@@ -95,12 +95,12 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
 
     // Check if keyword is in palette database
     var stored;
-    await colorLib.isStored(keyword).then(result => stored = result);
+    await colorLib.isPaletteStored(keyword).then(result => stored = result);
 
     if(stored){
         // Check if palette stored in the database is valid (Less than 1 month old)
         var valid;
-        await colorLib.isValid(keyword).then(function(res){
+        await colorLib.isPaletteValid(keyword).then(function(res){
             valid = res;
         });
 

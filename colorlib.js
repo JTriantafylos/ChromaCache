@@ -20,77 +20,90 @@ db.on('error', function(err){
     console.error(err);
 });
 
-//bring in palette model
+/*
+* ----------------------------------------------------
+* Models
+* ----------------------------------------------------
+*/
+
 let PaletteM = require('./models/palette');
-
-//bring in traffic model
 let TrafficM = require('./models/traffic');
-
-//bring in users model
 let UsersM = require('./models/users');
 
-
-//api_key = "AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw"
-//srch_eng_id = "012928527837730696752:wzqnawdyxwc"
 
 // Creates a Google Vision image annotator client with the given service key
 const imageClient = new vision.ImageAnnotatorClient({
     keyFilename: './secure/chromacache-d98d5cf45be5.json'
 });
 
-class Color{
+//A color that doesn't have a Harmonies parameter
+class SubColor{
 
     //constructor for color
-    constructor( r, g, b){    
-        this.red = r;
-        this.green = g;
-        this.blue = b;
+    constructor(rgb){    
+        this.RGB = rgb;
 
     }
-
-    //basic getter and setters
     getRGB(){
-        var col = {'red': this.red, 'green': this.green, 'blue':this.blue};
-        return col;
+        return this.RGB;
     }
 
-    //a string conversion for testing purposes 
-    toString(){
-        var outp = 'Color RGB is'+' Red : ' + this.red + ', Green: ' + this.green + ', Blue: ' + this.blue;
-        return outp;
+}
+
+//A palette that doesn't require a keyword and is filled with subcolors
+class SubPalette{
+    constructor(subcolors){
+        this.subcolors = subcolors;
+    }
+    addSubColor(subcolor){
+        this.subcolors.push(subcolor);
+    }
+    getSubColor(index){
+        return (this.subcolors[index]);
+    }
+
+}
+//Harmonies holds sub palettes of different sizes based on the needs
+class Harmonies{
+    constructor(subpalettes){
+        this.subpalettes = subpalettes;
+    }
+    addSubPalette(subpalette){
+        this.subpalettes.push(subpalette);
+    }
+    getSubPalette(index){
+        return (this.subpalettes[index]);
     }
 }
 
-class Palette{
+//this color class will also hold sub palettes
+class Color{
+    //rgb in int array
+    //complimentary and contrasting are SubPalettes
+    constructor(rgb, harmonies){
+        this.rgb = rgb;
+        this.harmonies = harmonies;
 
+    }
+
+}
+
+class Palette{
     //constructor for palette
+    //keyword is string
+    //colors is a SubColor array
     constructor(keyword, colors){
         this.keyword = keyword;
         this.colors = colors;
     }
 
-    //basic getters and setters
-    getColors(){
-        return this.colors;
-    }
-
-    getKeyword(){
-        return this.keyword;
-    }
 
     addColor(color){
         this.colors.push(color);
     }
 
-    //a string conversion for testing purposes
-    toString(){
-        var outp = this.getKeyword() + '\n';
-        this.colors.forEach(function(col){
-            outp += col.toString() +'\n';
-        });
-        return outp;      
-    }
 }
+//holds the searched keywords of the user
 class Searches{
     constructor(keywords){
         this.keywords = keywords;
@@ -101,6 +114,342 @@ class Searches{
     }
 
 }
+
+function createHarmonies(RGB){
+    var temp = new Harmonies([]);
+    temp.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
+    temp.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
+    temp.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
+    temp.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
+    temp.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
+    temp.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
+    
+    return temp;
+}
+
+function createComplementaryPalette(RGB){
+    var subP = new SubPalette([]);
+    subP.addSubColor(new SubColor(RGB));
+    var newRGB = [];
+
+    if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
+        //0 index has largest RGB value
+        if(RGB[1] <= RGB[2]){
+            //1 index has smallest value
+            newRGB.push(RGB[1]);
+            newRGB.push(RGB[0]);
+            newRGB.push((RGB[0]+RGB[1])-RGB[2]);
+
+        }else{
+            //2 index has smallest value
+            newRGB.push(RGB[2]);
+            newRGB.push((RGB[0]+RGB[2])-RGB[1]);
+            newRGB.push(RGB[0]);
+            
+        }
+
+    }else if(RGB[1] > RGB[0] && RGB[1] >= RGB[2]){
+        //1 index has largest RGB value
+        if(RGB[0] <= RGB[2]){
+            //0 index has smallest value
+            newRGB.push(RGB[1]);
+            newRGB.push(RGB[0]);
+            newRGB.push((RGB[1]+RGB[0])-RGB[2]);
+
+        }else{
+            //2 index has smallest value
+            newRGB.push((RGB[1]+RGB[2])-RGB[0]);
+            newRGB.push(RGB[2]);
+            newRGB.push(RGB[1]);
+
+        }
+
+    }else if(RGB[2] > RGB[1] && RGB[2] > RGB[0]){
+        //2 index has largest RGB value
+        if(RGB[0] <= RGB[1]){
+            //0 index has smallest value
+            newRGB.push(RGB[2]);
+            newRGB.push((RGB[2]+RGB[0])-RGB[1]);
+            newRGB.push(RGB[0]);
+
+        }else{
+            //1 index has smallest value 
+            newRGB.push((RGB[2]+RGB[1])-RGB[0]);
+            newRGB.push(RGB[2]);
+            newRGB.push(RGB[1]);
+
+        }
+
+    }
+   
+    subP.addSubColor(new SubColor(newRGB));
+    
+    return (subP);
+}
+function createTetradicPalette(RGB){
+    var tempSubP = createComplementaryPalette(RGB);
+    var temp = [];
+    temp.push(RGB[1]);
+    temp.push(RGB[2]);
+    temp.push(RGB[0]);
+
+    tempSubP.addSubColor(new SubColor(temp));
+    var tempLast = temp;
+    if(temp[0] >= temp[1] && temp[0] >= temp[2]){
+        //0 index has largest RGB value
+        if(temp[1] <= temp[2]){
+            //1 index has smallest value
+            tempSubP.addSubColor(new SubColor([temp[1], temp[0], ((temp[0]+temp[1])-temp[2])]));
+
+        }else{
+            //2 index has smallest value
+            tempSubP.addSubColor(new SubColor([temp[2], ((temp[0]+temp[2])-temp[1]), temp[0]]));
+        }
+
+    }else if(temp[1] > temp[0] && temp[1] >= temp[2]){
+        //1 index has largest RGB value
+        if(temp[0] <= temp[2]){
+            //0 index has smallest value
+            tempSubP.addSubColor(new SubColor([temp[1], temp[0], ((temp[1]+temp[0])-temp[2])]));
+        }else{
+            //2 index has smallest value
+            tempSubP.addSubColor(new SubColor([((temp[1]+temp[2])-temp[0]), temp[2], temp[1]]));
+        }
+
+    }else if(temp[2] > temp[1] && temp[2] > temp[0]){
+        //2 index has largest RGB value
+        if(temp[0] <= temp[1]){
+            //0 index has smallest value
+            tempSubP.addSubColor(new SubColor([temp[2], ((temp[2]+temp[0])-temp[1]), temp[0]]));
+        }else{
+            //1 index has smallest value
+            tempSubP.addSubColor(new SubColor([((temp[1]+temp[2])-temp[0]), temp[2], temp[1]]));
+        }
+
+    }
+    return (tempSubP);
+
+
+}
+function createTriadicPalette(RGB){
+    var subP = new SubPalette([]);
+    subP.addSubColor(new SubColor(RGB));
+
+    subP.addSubColor(new SubColor([RGB[1], RGB[2], RGB[0]]));
+    
+    subP.addSubColor(new SubColor([RGB[2], RGB[0], RGB[1]]));
+
+    return subP;
+
+}
+function createAnalogousPalette(RGB){
+    var delta;
+    var phi;
+    var theta;
+    var subP = new SubPalette([]);
+    subP.addSubColor(new SubColor(RGB));
+    if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
+        //0 index has largest RGB value
+        if(RGB[1] <= RGB[2]){
+            //1 index has smallest value
+            delta = RGB[2] - ((RGB[0] + RGB[1])/2);
+
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[0] - delta;
+                theta = RGB[1] + delta;
+
+                subP.addSubColor(new SubColor([phi, RGB[1], RGB[0]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[0] - delta;
+                theta = RGB[1] + delta;
+
+                subP.addSubColor(new SubColor([RGB[0], theta, RGB[1]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+            
+        }else{
+            //2 index has smallest value
+            delta = RGB[1] - ((RGB[0] + RGB[2])/2);
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[0] - delta;
+                theta = RGB[2] + delta;
+
+                subP.addSubColor(new SubColor([phi, RGB[0], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[0] - delta;
+                theta = RGB[2] + delta;
+
+                subP.addSubColor(new SubColor([RGB[0], RGB[2], theta]));
+                subP.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+        }
+
+    }else if(RGB[1] > RGB[0] && RGB[1] >= RGB[2]){
+        //1 index has largest RGB value
+        if(RGB[0] <= RGB[2]){
+            //0 index has smallest value
+            delta = RGB[2] - ((RGB[1] + RGB[0])/2);
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[1] - delta;
+                theta = RGB[0] + delta;
+
+                subP.addSubColor(new SubColor([RGB[0], phi, RGB[1]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], theta]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[1] - delta;
+                theta = RGB[0] + delta;
+
+                subP.addSubColor(new SubColor([theta, RGB[1], RGB[0]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], phi]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+
+        }else{
+            //2 index has smallest value
+            delta = RGB[0] - ((RGB[1] + RGB[2])/2);
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[1] - delta;
+                theta = RGB[2] + delta;
+
+                subP.addSubColor(new SubColor([RGB[1], phi, RGB[2]]));
+                subP.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[1] - delta;
+                theta = RGB[2] + delta;
+
+                subP.addSubColor(new SubColor([RGB[2], RGB[1], theta]));
+                subP.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+
+        }
+
+    }else if(RGB[2] > RGB[1] && RGB[2] > RGB[0]){
+        //2 index has largest RGB value
+        if(RGB[0] <= RGB[1]){
+            //0 index has smallest value
+            delta = RGB[1] - ((RGB[2] + RGB[0])/2);
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[2] - delta;
+                theta = RGB[0] + delta;
+
+                subP.addSubColor(new SubColor([RGB[0], RGB[2], phi]));
+                subP.addSubColor(new SubColor([RGB[0], theta, RGB[2]]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[2] - delta;
+                theta = RGB[0] + delta;
+
+                subP.addSubColor(new SubColor([theta, RGB[0], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], phi, RGB[2]]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+
+        }else{
+            //1 index has smallest value 
+            delta = RGB[0] - ((RGB[2] + RGB[1])/2);
+            if(delta >0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[2] - delta;
+                theta = RGB[1] + delta;
+
+                subP.addSubColor(new SubColor([RGB[2], RGB[1], phi]));
+                subP.addSubColor(new SubColor([theta, RGB[1], RGB[2]]));
+
+            }else if (delta < 0){
+                delta = Math.round(Math.abs(delta));
+                phi = RGB[2] - delta;
+                theta = RGB[1] + delta;
+
+                subP.addSubColor(new SubColor([RGB[1], theta, RGB[2]]));
+                subP.addSubColor(new SubColor([phi, RGB[1], RGB[2]]));
+            }else{
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+                subP.addSubColor(new SubColor([RGB[0], RGB[1], RGB[2]]));
+            }
+
+        }
+
+    }
+
+    return subP;
+
+}
+function createSplitComplementaryPalette(RGB){
+    
+    var analog = createAnalogousPalette(RGB);
+    var subP = new SubPalette([]);
+
+    subP.addSubColor(new SubColor(RGB));
+    subP.addSubColor(createComplementaryPalette(analog.getSubColor(1).getRGB()).getSubColor(1));
+    subP.addSubColor(createComplementaryPalette(analog.getSubColor(2).getRGB()).getSubColor(1));
+    return subP;
+    
+    
+}
+
+function createTintShadeMap(RGB){
+    var delta = 255 - RGB[0];
+    var rho = 255 - RGB[1];
+    var pi = 255 - RGB[2];
+    
+    var phi;
+    var theta;
+    var omega;
+
+    var subP = new SubPalette([]);
+
+    //generating shades (adding 'black')
+    var i;
+    for (i = 0; i < 3; i++){
+        phi = Math.round(((1+i)/4) *RGB[0]);
+        theta = Math.round(((1+i)/4) * RGB[1]);
+        omega = Math.round(((1+i)/4) * RGB[2]);
+
+        subP.addSubColor(new SubColor([phi,theta, omega]));
+
+    }
+    subP.addSubColor(new SubColor(RGB));
+    var i;
+    for (i = 0; i < 3; i++){
+        phi = Math.round((delta *((1+i)/4)) + RGB[0]);
+        theta = Math.round((rho *((1+i)/4)) + RGB[1]);
+        omega = Math.round((pi *((1+i)/4)) + RGB[2]);
+        
+        subP.addSubColor(new SubColor([phi,theta, omega]));
+
+    }
+    return subP;
+}
+
 
 module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
@@ -142,7 +491,7 @@ module.exports = {
         // Iterates through the first 7 dominant colors of each image link
         // and adds their RGB 
         var i;
-        for (i = 0; i <= 7; i++) {
+        for (i = 0; i < 7; i++) {
             // Runnings totals for R, G, and B values
             var redTotal = 0;
             var greenTotal = 0;
@@ -167,20 +516,24 @@ module.exports = {
                     colorCount++;
                 }
             }
-
+            var RGB = [];
             // Gets the average color from the array of images for the current color (n of 7)
-            var redAverage = Math.floor(Math.sqrt(redTotal / colorCount));
-            var greenAverage = Math.floor(Math.sqrt(greenTotal / colorCount));
-            var blueAverage = Math.floor(Math.sqrt(blueTotal / colorCount));
+                //red average
+            RGB.push(Math.floor(Math.sqrt(redTotal / colorCount)));
+                //green average
+            RGB.push(Math.floor(Math.sqrt(greenTotal / colorCount))) ;
+                //blue average
+            RGB.push(Math.floor(Math.sqrt(blueTotal / colorCount)));
+
+            
 
             // Adds the new nth of 7 color to the palette as a new color object
-            dominantPalette.addColor(new Color(redAverage, greenAverage, blueAverage));
+            dominantPalette.addColor(new Color(RGB, createHarmonies(RGB)));
             //console.log(dominantPalette);
         }
         // Returns a dominant palette with 7 colors in it
         return  dominantPalette;
     },
-
     addToPaletteDB: function (palette){
         
         //getting date of search
@@ -225,7 +578,7 @@ module.exports = {
         return returnedPalette;   
     },
 
-    isStored: async function(key){
+    isPaletteStored: async function(key){
 
         //counts occurrences for the palette
         var count = await PaletteM.countDocuments({ 'palette.keyword': key });
@@ -238,7 +591,7 @@ module.exports = {
 
     //this function will return true if the
     //color palette is recent, false if it needs updating
-    isValid: async function(key){
+    isPaletteValid: async function(key){
         var valid;
         await PaletteM.find({ 'palette.keyword': key }).then (function(palette){
             
@@ -268,17 +621,7 @@ module.exports = {
         return valid;
 
     },
-    createColor: function(r, g, b){
-        //using the color class
-        var c = new Color(r, g, b);
-        return c;
-    },
-    createPalette:function (keyword, colors){
-        //using palette class
-        var p = new Palette(keyword, colors);
-        return p;
-    },
-    isUser: async function(user){
+    isUserStored: async function(user){
 
         //counts occurrences for the user
         var count = await UsersM.countDocuments({ 'user': user });
