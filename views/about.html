@@ -25,23 +25,56 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" >
             <a class="navbar-brand" href="/">ChromaCache</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
+    
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home </a>
-                    </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="">About <span class="sr-only">(current)</span></a>
-                    </li>
-            </div>
-        </nav>
 
+                        <div onclick = "clickDropdown()" class="dropdown">
+                            <button class="dropbtn">Find Palette</button>
+                            <div class="dropdown-content">
+                                <a href="/">Find by Google Search</a>
+                                <a href="colorsearch">Find by Color Code</a>
+                            </div>
+                        </div>
+                        
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about" style="padding:16px">About</a>
+                    </li>
+                </ul>
+            </div>
+
+            
+        </nav> 
+
+        <script>
+            /* When the user clicks on the button, 
+            toggle between hiding and showing the dropdown content */
+            //functionality is for mobile users
+            function clickDropdown() {
+                document.getElementById("dropdown-content").classList.toggle("show");
+            }
+            
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+        </script>
         <div class="row">
             <div class="col-2">
             </div>

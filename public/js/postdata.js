@@ -1,7 +1,12 @@
 // SUBMIT FORM
 
 $( document ).ready(function() {
+    
+
     $('#searchForm').submit(function(event) {
+
+        //removes the RGB if a new search has been made
+        $('#RGB-output').empty();
 
         // Prevent the form from submitting via the browser.
         event.preventDefault();
@@ -18,6 +23,7 @@ $( document ).ready(function() {
             ajaxPost();
         }else{
             $('#searchID').val('Please enter a valid keyword!');
+            
         }
     });
 
@@ -41,27 +47,30 @@ $( document ).ready(function() {
                     $('#resultPalette').empty();
                     $.each(response.colors, function (i, color) {
                         var id = 'palette-' + colorCount;
-                        var fillColor = 'rgb(' + color.red + ', ' + color.green + ', ' + color.blue + ')';
+                        var RGB= color.RGB;
+                        var fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
+                        var hexConvert = 'HEX   #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
+                        var outputRGB = hexConvert.toUpperCase() +'RBG    ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2];
 
-                        $('#resultPalette').append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="196""></svg>');
+                        $('#resultPalette').append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="90""></svg>');
 
                         d3.select('#' + id).append('rect')
                             .attr('width', '100%')
-                            .attr('height', '196')
+                            .attr('height', '90')
                             .attr('style', 'fill:' + fillColor);
 
-                        $('#' + id).prop('title', fillColor);
+                        $('#' + id).prop('RGB-output', outputRGB);
 
                         $('.paletteElement').click(function () {
-                            var color = $(this).prop('title');
-                            $('#title').text(color);
+                            var color = $(this).prop('RGB-output');
+                            $('#RGB-output').text(color);
                         });
 
                         colorCount++;
 
                     });
 
-                    console.log(JSON.stringify(response));
+                    //console.log(JSON.stringify(response));
                 },
                 error : function(error) {
                     console.error('Error: ', error);

@@ -34,9 +34,16 @@ function createWebServer() {
         res.sendFile(htmlPath + 'index.html');
     }); 
 
+    // Serves index.html whenever the root/colorsearch.html of the 
+    // webserver is requested (i.e. localhost)
+    webServerApp.get('/colorsearch', function(req, res) {
+        res.sendFile(htmlPath + 'colorsearch.html');
+    }); 
+    
+
     // Serves about.html whenever root/about.html of the 
     // webserver is requested (i.e. localhost/about.html)
-    webServerApp.get('/about.html', function(req, res) {
+    webServerApp.get('/about', function(req, res) {
         res.sendFile(htmlPath + 'about.html');
     }); 
 
