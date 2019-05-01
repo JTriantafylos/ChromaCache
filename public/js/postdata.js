@@ -45,7 +45,7 @@ $( document ).ready(function() {
 
                     $('#resultPalette').empty();
                     $.each(response[0].colors, function (i, color) {
-                        var subpalettes = color.harmonies.subPalettes;
+                        //var subpalettes = color.harmonies.subPalettes;
                         var id = 'palette-' + colorCount;
                         var RGB= color.RGB;
                         var fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
@@ -67,9 +67,9 @@ $( document ).ready(function() {
                             $('#RGB-output').text(color);
                         });
                         
-                        for(var s = 0; s<subpalettes.length; s++){
-                            var subcolors = subpalettes[s].subColors;
-                        }
+                        // for(var s = 0; s<subpalettes.length; s++){
+                        //     var subcolors = subpalettes[s].subColors;
+                        // }
                         
 
                         colorCount++;
@@ -79,6 +79,7 @@ $( document ).ready(function() {
                     
                     
                     var frequentList = response[1];
+                    console.log(frequentList);
                     for(var x =0; x<frequentList.length;x++){
                         
                         $('#frequent-'+x).empty();

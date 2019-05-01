@@ -777,13 +777,16 @@ module.exports = {
 
         for(var t = 0; t < top_ten_keys.length; t++){
             await PaletteM.find({ 'palette.keyword': top_ten_keys[t] })
-                .then(function(palette){       
-                    top_ten.push(palette);
+                .then(function(palette){  
+                    palette.forEach(function(data){
+                        top_ten.push(data);
+                    });    
+                    
                 }).catch(function(err){
                     console.error('error fetching palettes: ' + err);
                 });
         }
-        
+    
         return top_ten;
     },
     removeFromPaletteDB: async function(key){
