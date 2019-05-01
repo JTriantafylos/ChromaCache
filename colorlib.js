@@ -29,6 +29,7 @@ db.on('error', function(err){
 let PaletteM = require('./models/palette');
 let TrafficM = require('./models/traffic');
 let UsersM = require('./models/users');
+// eslint-disable-next-line no-unused-vars
 let FrequencyM = require('./models/frequentPalette');
 
 //color harmony reference material
@@ -155,9 +156,9 @@ function createHarmonies(RGB){
     
     //methods to generate the color harmonies
     harmony.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
     harmony.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
     harmony.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
+    harmony.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
     harmony.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
     harmony.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
     
@@ -524,11 +525,11 @@ function createTintShadeMap(RGB){
     subPalette.addSubColor(new SubColor(RGB));
 
     //generating and adding 3 tints to sub-palettes (tints = adding 'white')
-    var i;
-    for (i = 0; i < 3; i++){
-        phi = Math.round((delta *((1+i)/4)) + RGB[0]);
-        theta = Math.round((rho *((1+i)/4)) + RGB[1]);
-        omega = Math.round((pi *((1+i)/4)) + RGB[2]);
+    var t;
+    for (t = 0; t < 3; t++){
+        phi = Math.round((delta *((1+t)/4)) + RGB[0]);
+        theta = Math.round((rho *((1+t)/4)) + RGB[1]);
+        omega = Math.round((pi *((1+t)/4)) + RGB[2]);
         
         subPalette.addSubColor(new SubColor([phi,theta, omega]));
 
@@ -536,7 +537,75 @@ function createTintShadeMap(RGB){
     return subPalette;
 }
 
+async function incTrafficDB(){
+    var date = new Date();
+    var currentDate = [];
+    currentDate.push(date.getDate());
+    currentDate.push(date.getMonth()+1);
+    currentDate.push(date.getUTCFullYear());
 
+    await TrafficM.find({'date':currentDate}).then(async function(traffic){
+
+        //checking to see if there has been any traffic
+        if(traffic.length == 0){
+            
+            //if there is no traffic, create an instance for the day
+            TrafficM.create({'date':currentDate, 'traffic': 1});
+        }else{
+            await traffic.forEach(async function(data){  
+
+                //increases traffic
+                await TrafficM.updateOne({'date':currentDate},{$set: {'traffic':((data.traffic) +1)}}, {multi: false});
+                
+            });
+        }
+        
+    }).catch(function(err){
+        console.error('error updating traffic: ' + err);
+    }); 
+}
+//currently using a bubble sort, but eventually want
+//to upgrade to a sorting algorithm with a better
+//run-time complexity
+function sortDictionary(dict){
+    var dictKeys = [];
+    var dictValues = [];
+
+    //converting dictionary to arrays
+    for(var keys in dict){
+        dictKeys.push(keys);
+        dictValues.push(dict[keys]);
+    }
+    
+    //bubble sort algorithm
+    var swapped;    
+    do {
+        swapped = false;
+        for (var i = 0; i < dictKeys.length-1; i++) {
+            if (dictValues[i] < dictValues[i+1]) {
+                var tempK = dictKeys[i];
+                var tempV = dictValues[i];
+                dictKeys[i] = dictKeys[i+1];
+                dictValues[i] = dictValues[i+1];
+
+                dictKeys[i+1] = tempK;
+                dictValues[i+1] = tempV;
+
+                swapped = true;
+            }
+        }
+    } while (swapped);
+    
+        
+    //converting the two arrays into a dictionary again
+    var tempDict = new Object();
+    for(var t = 0; t < dictKeys.length; t++){
+        tempDict[dictKeys[t]] = dictValues[t];
+
+    }
+    return tempDict;
+    
+}
 module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
         // Holds the URL's to be returned
@@ -604,11 +673,11 @@ module.exports = {
             }
             var RGB = [];
             // Gets the average color from the array of images for the current color (n of 7)
-                //red average
+            //red average
             RGB.push(Math.floor(Math.sqrt(redTotal / colorCount)));
-                //green average
+            //green average
             RGB.push(Math.floor(Math.sqrt(greenTotal / colorCount))) ;
-                //blue average
+            //blue average
             RGB.push(Math.floor(Math.sqrt(blueTotal / colorCount)));
 
             
@@ -620,7 +689,7 @@ module.exports = {
         // Returns a dominant palette with 7 colors in it
         return  dominantPalette;
     },
-    addToPaletteDB: function (palette){
+    addToPaletteDB: async function (palette, searches){
         
         //getting date of search
         var date = new Date();
@@ -631,8 +700,8 @@ module.exports = {
 
         //using the palette model from ./models/palette.js
         
-        //saving palette to database and giving a success responce
-        PaletteM.create({date:currentDate, palette: palette, searches:1})
+        //saving palette to database and giving a success response
+        await PaletteM.create({date:currentDate, palette: palette, searches:(1+searches)})
             .catch(function(err){
                 console.error('unsuccessful: ' + '\n' + err);
             });
@@ -648,124 +717,79 @@ module.exports = {
             paletteRecord.forEach(async function(data){
 
                 //increasing the amount of searches for the palette
-                var searchesVal = data.searches;
-                await PaletteM.updateOne({'palette.keyword': key},{$set: {'searches':(searchesVal +1)}}, {multi: false});
+                await PaletteM.updateOne({'palette.keyword': key},{$set: {'searches':((data.searches) +1)}}, {multi: false});
             });      
         }).catch(function(err){
             console.error('error updating palette: ' + err);
         });
+        
 
     },
-    updateFrequentDb: async function(palette){
-        var count = await FrequencyM.countDocuments({ 'palette.keyword': palette.keyword });
-        var length = await FrequencyM.countDocuments();
+    getSearches: async function(keyword){
+        //this function is called when the palette is definitely in the database
+        var searches;
+        await PaletteM.find({'palette.keyword': keyword}).then(function(palettes){
+            palettes.forEach(function(data){
+
+                searches =  data.searches;
+            });
+
+        });
+        
+        return searches;
+    },
+    updateFrequentDb: async function(){
+        //delete all
+        //look for top 10 in palettedb
+        //send back all entries in order
 
         var date = new Date();
         var currentDate = [];
         currentDate.push(date.getDate());
         currentDate.push(date.getMonth()+1);
         currentDate.push(date.getUTCFullYear());
-        if(length <10 && count == 0){
 
-            //if there are less than 10 entries in the frequency database
-            //just append the new palette to the end of the database
-            FrequencyM.create({date_added:currentDate, date_latest:currentDate, palette: palette, searches:1})
-                .catch(function(err){
-                    console.error('unsuccessful: ' + '\n' + err);
-                });
-        }else{
-            if(count == 0){
-            
-                //check to see if it can replace one;
+        //await FrequencyM.deleteMany();
 
-                //WIP
-                //check how many searches are in  palettedb
-                var searchesVal;
-                var searchesFVal = [];
-                await PaletteM.find({'palette.keyword': palette.keyword}).then(function(paletteRecord){
-                    
-                    //parses through palette data
-                    paletteRecord.forEach(async function(data){
+        var palettes_dictionary = new Object();
+        await PaletteM.find().then(function(palettes){
+            palettes.forEach(function(data){
+
+                palettes_dictionary[data.palette.keyword] = data.searches;
+            });
+
+        });
         
-                        //increasing the amount of searches for the palette
-                        searchesVal = data.searches;
-                    });      
+        palettes_dictionary  = sortDictionary(palettes_dictionary);
+
+
+        var dictKeys = [];
+
+        //converting dictionary to arrays
+        for(var keys in palettes_dictionary){
+            dictKeys.push(keys);
+        }
+        var top_ten_keys = [];
+        for(var i = 0; i < dictKeys.length && i < 10; i ++){
+            top_ten_keys.push(dictKeys[i]);
+        }
+        var top_ten = [];
+
+        for(var t = 0; t < top_ten_keys.length; t++){
+            await PaletteM.find({ 'palette.keyword': top_ten_keys[t] })
+                .then(function(palette){       
+                    top_ten.push(palette);
                 }).catch(function(err){
-                    console.error('error: ' + err);
+                    console.error('error fetching palettes: ' + err);
                 });
-
-                //check if the searches are now higher than the lowest in frequency
-                await FrequencyM.find().then(function(frequencyRecord){
-                        
-                    //parses through palette data
-                    frequencyRecord.forEach(async function(data){
-            
-                        //increasing the amount of searches for the palette
-                        searchesFVal.push(data.searches);
-                    });      
-                }).catch(function(err){
-                    console.error('error: ' + err);
-                });
-                var min = Math.min.apply(Math, searchesFVal);
-                var lowestVals = [];
-                await FrequencyM.find({'searches': min}).then(function(res){
-                    res.forEach(async function(data){
-            
-                        //collecting the amount of palettes with the same amount of searches
-                        lowestVals.push(data);
-                    });     
-                    
-                });
-
-                
-                if(searchesVal>min){
-                    //if true, remove lowest and add the new one
-
-
-                    //only use the first index, this also means that
-                    //if there are only one index, the first one wont cause errors
-                    FrequencyM.deleteOne({ 'palette.keyword':  lowestVals[0].palette.keyword })
-                    .catch(function(err){
-                        console.error('unsuccessful: ' + '\n' + err);
-                    });
-
-                    //add the new palette to frequent database
-                    FrequencyM.create({date_added:currentDate, date_latest:currentDate, palette: palette, searches:searchesVal})
-                    .catch(function(err){
-                        console.error('unsuccessful: ' + '\n' + err);
-                    });
-
-                }
-                    
-            }else{
-    
-               
-                //update the one already in there
-                await FrequencyM.find({'palette.keyword': palette.keyword}).then(function(frequencyRecord){
-                    
-                    //parses through palette data
-                    frequencyRecord.forEach(async function(data){
-        
-                        //increasing the amount of searches for the palette
-                        var searchesVal = data.searches;
-                        await FrequencyM.updateOne({'palette.keyword': palette.keyword},{$set: {'date_latest':currentDate, 'searches': searchesVal+1}}, {multi: true});
-                    });      
-                }).catch(function(err){
-                    console.error('error updating palette: ' + err);
-                });
-    
-            }
         }
         
-        
+        return top_ten;
     },
-    getFrequencyOrder:function(){
-
-    },
-    removeFromPaletteDB: function(key){
+    removeFromPaletteDB: async function(key){
 
         //searches and deletes from palette
-        PaletteM.deleteOne({ 'palette.keyword': key })
+        await PaletteM.deleteOne({ 'palette.keyword': key })
             .catch(function(err){
                 console.error('unsuccessful: ' + '\n' + err);
             });
@@ -807,17 +831,11 @@ module.exports = {
             
             //getting current date
             var date = new Date();
-            var currentDate = [];
-            currentDate.push(date.getDate());
-            currentDate.push(date.getMonth()+1);
-            currentDate.push(date.getUTCFullYear());
-
+            var currentMonth = (date.getMonth()+1);
+            
             palette.forEach(function(data){
-    
                 //comparing the dates
-    
-                if(JSON.stringify(data.date) == JSON.stringify(currentDate)){
-                    
+                if(JSON.stringify(data.date[1]) == JSON.stringify(currentMonth)){
                     valid = true;
                 }else{
                     valid = false;
@@ -833,7 +851,8 @@ module.exports = {
 
     },
     isUserStored: async function(user){
-
+        //increases the traffic counter for that day
+        incTrafficDB();
         //counts occurrences for the user
         var count = await UsersM.countDocuments({ 'user': user });
         if(count == 0){
@@ -841,8 +860,9 @@ module.exports = {
         }else{
             return true;
         }
+
     },
-    addToUserDB: function(user, keyword){
+    addToUserDB: async function(user, keyword){
 
         //creates new user with given fields
         var date = new Date();
@@ -852,10 +872,10 @@ module.exports = {
         currentDate.push(date.getUTCFullYear());
 
 
-        UsersM.create({firstDate:currentDate, latestDate:currentDate, searched: new Searches([keyword]), user: user, usages: 1})
-        .catch(function(err){
-            console.log('unsuccessful: ' + '\n' + err);
-        });
+        await UsersM.create({firstDate:currentDate, latestDate:currentDate, searched: new Searches([keyword]), user: user, usages: 1})
+            .catch(function(err){
+                console.log('unsuccessful: ' + '\n' + err);
+            });
         
 
 
@@ -874,9 +894,9 @@ module.exports = {
             
             //checks for the current words held in the user records
             userRecord.forEach(async function(data){
-                var temp = data.searched.keywords;
+                var user_keywords = data.searched.keywords;
                 var counter = 0; 
-                await temp.forEach(function(searches){
+                await user_keywords.forEach(function(searches){
 
                     if(searches == keyword){
                         counter ++;
@@ -885,56 +905,23 @@ module.exports = {
 
                 //means the key words has not yet been searched
                 if(counter == 0){
-                    temp.push(keyword);
+                    user_keywords.push(keyword);
                 }
 
                 //comparing current date to the last recorded date
                 if(JSON.stringify(data.latestDate) == JSON.stringify(currentDate)){
-                    
-                    //adds keyword to searched keywords and updates the usages
-                    await UsersM.updateOne({'user':user},{$set: {'usages':(data.usages +1),'searched':new Searches(temp)}}, {multi: true});
+                
+                    //only adds the keyword and updates usages(meaning the usage was on same day as last day used)
+                    await UsersM.updateOne({'user':user},{$set: {'usages':((data.usages) +1),'searched':new Searches(user_keywords)}}, {multi: true});
                 }else{
                     
-                    //only adds the keyword(meaning the search was on same day as last day used)
-                    await UsersM.updateOne({'user':user},{$set: {'latestDate':currentDate, 'searched':new Searches(temp)}}, {multi: true});
+                    //adds keyword to searched keywords, updates the usages and updates the last day using the website
+                    await UsersM.updateOne({'user':user},{$set: {'latestDate':currentDate, 'usages':((data.usages) +1), 'searched':new Searches(user_keywords)}}, {multi: true});
                 }
             });      
         }).catch(function(err){
             console.error('error updating traffic: ' + err);
         });
-    },
-
-    incTrafficDB: async function(){
-        var date = new Date();
-        var currentDate = [];
-        currentDate.push(date.getDate());
-        currentDate.push(date.getMonth()+1);
-        currentDate.push(date.getUTCFullYear());
-    
-        await TrafficM.find({'date':currentDate}).then(function(traffic){
-
-            //checking to see if there has been any traffic
-            if(traffic.length == 0){
-                
-                //if there is no traffic, create an instance for the day
-                TrafficM.create({'date':currentDate, 'traffic': 1});
-            }
-            traffic.forEach(async function(data){  
-
-                //checks again to see if there was traffic on that day
-                if(JSON.stringify(data.date) == JSON.stringify(currentDate)){
-                    
-                    //increases how much traffic
-                    await TrafficM.updateOne({'date':currentDate},{$set: {'traffic':(data.traffic +1)}}, {multi: false});
-                }else{
-
-                    //create an instance for the day
-                    TrafficM.create({'date':currentDate, 'traffic': 1});
-                }
-            });
-        }).catch(function(err){
-            console.error('error updating traffic: ' + err);
-        }); 
     }
 };
         

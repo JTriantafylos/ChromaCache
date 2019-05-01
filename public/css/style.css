@@ -178,3 +178,26 @@ h1
 * Drop-down bar css
 * -----------------
 */
+
+
+/*
+* -----------------
+* Harmonies/Frequency container
+* -----------------
+*/
+fieldset legend {
+  display: block;
+  margin-left: 20px;
+  width:auto; 
+  font-size: 27px;
+  font-weight: bold; 
+  color:black;
+  padding: 2px;
+}
+fieldset {
+  border: 1px solid black; 
+  border-color: black; 
+  border-radius: 4px; 
+  padding:16px; 
+  margin: 90px;
+}

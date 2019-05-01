@@ -1,5 +1,4 @@
 // SUBMIT FORM
-
 $( document ).ready(function() {
     
 
@@ -45,11 +44,13 @@ $( document ).ready(function() {
                     var colorCount = 0;
 
                     $('#resultPalette').empty();
-                    $.each(response.colors, function (i, color) {
+                    $.each(response[0].colors, function (i, color) {
+                        var subpalettes = color.harmonies.subPalettes;
                         var id = 'palette-' + colorCount;
                         var RGB= color.RGB;
                         var fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                        var hexConvert = 'HEX   #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
+                        var hexConvert = 'HEX   #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16)
+                        ;
                         var outputRGB = hexConvert.toUpperCase() +'RBG    ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2];
 
                         $('#resultPalette').append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="90""></svg>');
@@ -65,11 +66,54 @@ $( document ).ready(function() {
                             var color = $(this).prop('RGB-output');
                             $('#RGB-output').text(color);
                         });
+                        
+                        for(var s = 0; s<subpalettes.length; s++){
+                            var subcolors = subpalettes[s].subColors;
+                        }
+                        
 
                         colorCount++;
 
                     });
+                    
+                    
+                    
+                    var frequentList = response[1];
+                    for(var x =0; x<frequentList.length;x++){
+                        
+                        $('#frequent-'+x).empty();
+                        $('#frequent-name-'+x).empty();
+                        var keyword = frequentList[x].palette.keyword;
 
+                        //capitalizing the first letter
+                        if(keyword.length == 1){
+                            $('#frequent-name-'+x).append(keyword.charAt(0).toUpperCase());
+                        }else{
+                            $('#frequent-name-'+x).append(keyword.charAt(0).toUpperCase() + keyword.substring(1));
+                        }
+                        
+                        $.each(frequentList[x].palette.colors, function (i, color) {
+                            
+                            var id = 'palette-' + colorCount;
+                            var RGB= color.RGB;
+                            var fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
+                            var hexConvert = 'HEX   #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16)
+                            ;
+                            var outputRGB = hexConvert.toUpperCase() +'RBG    ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2];
+
+                            $('#frequent-'+x).append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="90""></svg>');
+
+                            d3.select('#' + id).append('rect')
+                                .attr('width', '100%')
+                                .attr('height', '90')
+                                .attr('style', 'fill:' + fillColor);
+
+                            $('#' + id).prop('RGB-output', outputRGB);
+
+                            colorCount++;
+
+                        });
+                    }
                     //console.log(JSON.stringify(response));
                 },
                 error : function(error) {

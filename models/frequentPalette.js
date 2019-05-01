@@ -7,8 +7,8 @@ let frequencySchema = mongoose.Schema({
         require: true
     },
     date_latest:{
-            type:[Number],
-            require:true
+        type:[Number],
+        require:true
     },
     palette: {
         type: Palette,
@@ -26,6 +26,7 @@ let frequencySchema = mongoose.Schema({
 
 
 
+// eslint-disable-next-line no-unused-vars
 let FrequencyM = module.exports = mongoose.model('frequency', frequencySchema);
 
 

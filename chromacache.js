@@ -83,81 +83,98 @@ try {
 * ----------------------------------------------------
 */
 
+/*
+* ----------------------------------------------------
+Request Architecture:
+
+    is-user-stored(update-traffic)
+        True -> Update user keyword log
+        False -> Make new user
+    
+    is-palette-stored
+        True -> is-palette-valid
+                    True -> send-to-front
+                    False -> request-new-palette
+        False -> request-new-palette
+    send-to-front()
+        send-to-frontend((update-frequency-db))
+
+* ----------------------------------------------------
+*/
+
+
+
 webServerApp.post('/api/clientMessage', async function (req, res) {
     // Turns search keyword to lowercase
     var keyword = req.body.value.toLowerCase();
     
+    //trims address
+    var client_ip = (req.ip).substring(7);
+   
     //checks if the user is in the database
-    await colorLib.isUserStored(req.ip).then(async function(res){
+    await colorLib.isUserStored(client_ip).then(async function(user_in_db){
 
         //if is in database, increase the usages and add keyword to Searched
         //otherwise, create new user
-        if(res){
-            await colorLib.incUserDB(req.ip, keyword);
+        if(user_in_db){
+            await colorLib.incUserDB(client_ip, keyword);
              
         }else{
-            await colorLib.addToUserDB(req.ip, keyword);
+            await colorLib.addToUserDB(client_ip, keyword);
+
         }
     });
 
-    // Check if keyword is in palette database
-    var stored;
-    await colorLib.isPaletteStored(keyword).then(result => stored = result);
-
-    if(stored){
-        // Check if palette stored in the database is valid (Less than 1 month old)
-        var valid;
-        await colorLib.isPaletteValid(keyword).then(function(res){
-            valid = res;
-        });
-
-        
-        if(valid){
-
-            colorLib.incPaletteDB(keyword);
-            //return database response
-            await colorLib.fetchPalette(keyword).then(function(res){
-                sendToFrontEnd(res);
+    await colorLib.isPaletteStored(keyword).then(async function(palette_in_db){
+        if(palette_in_db){
+            // Check if palette stored in the database is valid (Less than 1 month old)
+            await colorLib.isPaletteValid(keyword).then(async function(is_palette_valid){
                 
+                if(is_palette_valid){
+                    //increase palette search record
+                    //return database response
+                    await colorLib.incPaletteDB(keyword);
+                    await colorLib.fetchPalette(keyword).then(function(palette){
+                        sendToFrontEnd(palette);
+                        
+                    });
+                }else{
+                    
+                    var search_values = await colorLib.getSearches(keyword);
+                    await colorLib.removeFromPaletteDB(keyword);
+                    requestPalette(keyword, search_values);
+                }
+
             });
             
-            
         }else{
-            await colorLib.removeFromPaletteDB(keyword);
-            collectPalette();
+            requestPalette(keyword, 0);
         }
 
-    }else{
-        collectPalette();
-    }
+    });
 
-    async function collectPalette(){
+    async function requestPalette(keyword, searches){
+
         // Calling the fetch image links from color library
-        let imageLinks = [];
         await colorLib.fetchImageLinks(keyword,
             'AIzaSyC37-yN0mhRqARSEDJbYC3HaanMUKNNIbw',
-            '012928527837730696752:wzqnawdyxwc').then(function(result){
-            imageLinks = result;
-        });
+            '012928527837730696752:wzqnawdyxwc').then(async function(image_links){
+            
+            // Calling the fetch dominant palette from color library
+            await colorLib.fetchDominantColorPalette(keyword, image_links).then(async function(color_palette){
+                //adds new palette to database
+                await colorLib.addToPaletteDB(color_palette, searches);
+                sendToFrontEnd(color_palette);
+            });
 
-        // Calling the fetch dominant palette from color library
-        await colorLib.fetchDominantColorPalette(keyword, imageLinks).then( async function (result) {
-            //adds new palette to database
-            await colorLib.addToPaletteDB(result);
-            sendToFrontEnd(result);
+            
         });
-
-        
     }
     
     // Sends the dominant palette to the client
-
-    function sendToFrontEnd(dp){
-        colorLib.incTrafficDB();
-        colorLib.updateFrequentDb(dp);
-        //var fdb = colorLib.getFrequentDB();
-        //res.sent([dp, fdb]);
-        res.send(dp);
+    async function sendToFrontEnd(palette){
+ 
+        res.send([palette, await colorLib.updateFrequentDb()]);
     }
     
 });

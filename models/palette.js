@@ -22,6 +22,7 @@ let paletteSchema = mongoose.Schema({
 
 
 
+// eslint-disable-next-line no-unused-vars
 let PaletteM = module.exports = mongoose.model('palettes', paletteSchema);
 
 
