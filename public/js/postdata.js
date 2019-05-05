@@ -18,6 +18,7 @@ $( document ).ready(function() {
             // Displays the loading message
             $('#resultPalette').append('<h1 id="loadingMessage">Finding your palette...</h1>');
 
+            
             // Calls the AJAX POSTing function
             ajaxPost();
         }else{
@@ -28,9 +29,9 @@ $( document ).ready(function() {
 
     function ajaxPost() {
 
-        // PREPARE FORM DATA
+        // PREPARE FORM DATA (formData = what was searched)
         var formData = {value: $('#searchID').val()};
-
+        
         // DO POST
         $.ajax(
             {
@@ -42,34 +43,84 @@ $( document ).ready(function() {
                 success : function(response) {
 
                     var colorCount = 0;
-
+                    var harmony = 0;
                     $('#resultPalette').empty();
+                    $('#harmony-0').empty();
                     $.each(response[0].colors, function (i, color) {
-                        //var subpalettes = color.harmonies.subPalettes;
+
+                        //is all of the subpaletes
+                        var subpalette = color.harmonies.subPalettes;
+                        
+                        //will be an iterated id for all rectangles in the result palette
                         var id = 'palette-' + colorCount;
+
+                        //RGB color used to define fill-color and a hexadecimal conversion
                         var RGB= color.RGB;
                         var fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                        var hexConvert = 'HEX   #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16)
-                        ;
-                        var outputRGB = hexConvert.toUpperCase() +'RBG    ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2];
-
+                        var hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
+                        
+                        var outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
+                        
+                        //appending a (Scalable Vector Graphic) to the resultPalette span
                         $('#resultPalette').append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="90""></svg>');
 
+                        //defining the attributes to the appended svg
+                        // eslint-disable-next-line no-undef
                         d3.select('#' + id).append('rect')
                             .attr('width', '100%')
                             .attr('height', '90')
                             .attr('style', 'fill:' + fillColor);
 
+                        //changing the property of the svg of the given id
                         $('#' + id).prop('RGB-output', outputRGB);
 
+                        //click event for element in paletteElement class
                         $('.paletteElement').click(function () {
                             var color = $(this).prop('RGB-output');
                             $('#RGB-output').text(color);
+                            
+                            //load the harmonies
                         });
+
                         
-                        // for(var s = 0; s<subpalettes.length; s++){
-                        //     var subcolors = subpalettes[s].subColors;
-                        // }
+                        var complementary = subpalette[0];
+                        var triadic = subpalette[1];
+                        var analogous = subpalette[2];
+                        var tetradic = subpalette[3];
+                        var splitcomplementary = subpalette[4];
+                        var tintshade = subpalette[5];
+
+                        id = 'complementary-0';
+                        RGB = complementary.subColors.subColors[0].RGB;
+                        fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
+                        $('#harmony-'+harmony).append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="90""></svg>');
+                        // eslint-disable-next-line no-undef
+                        d3.select('#' + id).append('rect')
+                            .attr('width', '100%')
+                            .attr('height', '90')
+                            .attr('style', 'fill:' + fillColor);
+                        hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
+                        outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
+                            
+                        $('#' + id).prop('RGB-output', outputRGB);
+
+
+                        
+                        id = 'complementary-1';
+                        RGB = complementary.subColors.subColors[1].RGB;
+                        fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
+                        $('#harmony-'+harmony).append('<svg id="' + id + '" class="paletteElement" xmlns="http://www.w3.org/2000/svg" width="10%" height="90""></svg>');
+                        // eslint-disable-next-line no-undef
+                        d3.select('#' + id).append('rect')
+                            .attr('width', '100%')
+                            .attr('height', '90')
+                            .attr('style', 'fill:' + fillColor);
+                        hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
+                        outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
+                        
+                        $('#' + id).prop('RGB-output', outputRGB);
+                        
+                        
                         
 
                         colorCount++;
@@ -77,9 +128,8 @@ $( document ).ready(function() {
                     });
                     
                     
-                    
+                    //load the frequntly searched list
                     var frequentList = response[1];
-                    console.log(frequentList);
                     for(var x =0; x<frequentList.length;x++){
                         
                         $('#frequent-'+x).empty();
@@ -87,10 +137,13 @@ $( document ).ready(function() {
                         var keyword = frequentList[x].palette.keyword;
 
                         //capitalizing the first letter
+                        
                         if(keyword.length == 1){
                             $('#frequent-name-'+x).append(keyword.charAt(0).toUpperCase());
+                            
                         }else{
                             $('#frequent-name-'+x).append(keyword.charAt(0).toUpperCase() + keyword.substring(1));
+                            
                         }
                         
                         $.each(frequentList[x].palette.colors, function (i, color) {
@@ -112,10 +165,11 @@ $( document ).ready(function() {
                             $('#' + id).prop('RGB-output', outputRGB);
 
                             colorCount++;
+                            
 
                         });
                     }
-                    //console.log(JSON.stringify(response));
+              
                 },
                 error : function(error) {
                     console.error('Error: ', error);

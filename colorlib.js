@@ -29,8 +29,6 @@ db.on('error', function(err){
 let PaletteM = require('./models/palette');
 let TrafficM = require('./models/traffic');
 let UsersM = require('./models/users');
-// eslint-disable-next-line no-unused-vars
-let FrequencyM = require('./models/frequentPalette');
 
 //color harmony reference material
 //http://www.tigercolor.com/color-lab/color-theory/color-harmonies.htm
@@ -749,8 +747,6 @@ module.exports = {
         currentDate.push(date.getMonth()+1);
         currentDate.push(date.getUTCFullYear());
 
-        //await FrequencyM.deleteMany();
-
         var palettes_dictionary = new Object();
         await PaletteM.find().then(function(palettes){
             palettes.forEach(function(data){
@@ -786,7 +782,7 @@ module.exports = {
                     console.error('error fetching palettes: ' + err);
                 });
         }
-    
+        
         return top_ten;
     },
     removeFromPaletteDB: async function(key){
