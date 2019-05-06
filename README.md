@@ -31,6 +31,8 @@ See us at [ChromaCache](www.chromacache.com)!
 - [ ] Write about page
 - [x] Create frequently searched (google) palettes
 - [ ] Create RGB/HEX search page
-- [ ] create database for RGB/HEX page
+- [ ] Create database for RGB/HEX page
+- [ ] Check calculations used for harmonies
+- [ ] Update HTML
 
  Created **James Triantafylos (@JTriantafylos)** & **Eyas Valdez (@SpiltBeans)**.
