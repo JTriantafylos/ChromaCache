@@ -3,8 +3,8 @@
     <head>
         <title>ChromaCache</title>
 
-        <!-- Icon made by FreePik from www.flaticon.com -->
-        <link rel="shortcut icon" type="image/png" href="/img/favicon.ico"/>
+        <!-- Icon made by Kyla Di Perna -->
+        <link rel="shortcut icon" type="image/png" href="/img/logo-4.ico"/>
 
         <!-- Bootstrap Meta Tags -->
         <meta charset="utf-8">
@@ -49,6 +49,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="about" style="padding:16px">About</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact-us" style="padding:16px">Contact Us</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -84,7 +87,7 @@
             </div>
 
             <div class="col-8">
-                <h1 id="title" class="text-center">Find a Palette</h1>
+                <h1 id="title" class="text-center" style = "font-size:80px">Find a Palette</h1>
                 <form id="searchForm" class="text-center">
                     <input type="text" id="searchID" name="search" class="form-control form-rounded text-center" placeholder="Search for a style..." autocomplete="off">
                     <button type="submit" id="searchSubmitID" class="btn btn-light">Search</button>
@@ -115,30 +118,46 @@
 
         <span>
             <fieldset id = "HarmField">
-                <legend id="HarmLegend" visible="true" >Harmonies</legend>
-                <p style="padding: 10px 438px 10px 75px;float: left;">Complementary</p>
-                <span id = harmony-0></span>
-                <P style="padding: 10px 10px 10px 0px;">Triadic</P>
-                <span id = harmony-1></span>
-                <p style="padding: 10px 475px 10px 75px;float: left;">Analogous</p>
-                <span id = harmony-2></span>
-                <p style="padding: 10px 10px 10px 0px;">Tetradic</p>
-                <span id = harmony-3></span>
-                <p style="padding: 10px 400px 10px 75px;float: left;">Split-Complementary</p>
-                <span id = harmony-4></span>
-                <p style="padding: 10px 10px 10px 0px;">Tint-Shade Map</p>
-                <span id = harmony-5></span>
+                <legend id="HarmLegend" visible="true" style ="font-size:50px">Harmonies</legend>
+
+                <div>
+                        <!-- padding:up,right,down, left -->
+                        <span style = "font-size: 40px; padding: 10px 397px 10px 100px;">Complementary</span>
+                        <span style = "font-size: 40px;padding: 10px 0px 10px 150px;">Triadic</span>
+                    </div>
+                    <div>
+                        <span id = harmony-0 style = "padding: 15px 479px 10px 100px;"></span>
+                        <span id = harmony-1 style = "padding: 15px 0px 10px 150px;"></span>
+                    </div>
+    
+    
+                    <div>
+                        <span style = "font-size: 40px; padding: 15px 490px 10px 100px;">Analogous</span>
+                        <span style = "font-size: 40px; padding: 10px 0px 10px 150px;">Tetradic</span>
+                    </div>
+                    <div>
+                        <span id = harmony-2 style = "padding: 15px 379px 10px 100px;"></span>
+                        <span id = harmony-3 style = "padding: 15px 0px 10px 150px;"></span>
+                    </div>
+    
+    
+                    <div>
+                        <span style = "font-size: 40px; padding: 15px 303px 10px 100px;">Split-Complementary</span>
+                        <span style = "font-size: 40px; padding: 10px 0px 10px 150px;">Tint-Shade Map</span>
+                    </div>
+                    <div>
+                        <span id = harmony-4 style = "padding: 15px 379px 10px 100px;"></span>
+                        <span id = harmony-5 style = "padding: 15px 0px 10px 150px;"></span>
+                    </div>
             </fieldset>
         </div>
         <div>
             <fieldset id = "FreqField">
-                <legend id="FreqField" visible="true" >Frequently Searched</legend>
+                <legend id="FreqField" visible="true" style ="font-size:50px">Frequently Searched</legend>
 
-                <!-- need to make a click event for auto-search the frequent -->
                 <span>
-                    <div id = "frequent-name-0"></div>
-                    <div id="frequent-0" class="text-center">
-                    </div>
+                    <div id ="frequent-name-0"></div>
+                    <div id="frequent-0" class="text-center"></div>
                     <div id = "frequent-name-1"></div>
                     <div id="frequent-1" class="text-center">
                     </div>
@@ -173,4 +192,10 @@
             </fieldset>
         </div>
     </body>
+    <hr> 
+    <footer>
+        <p style = "text-align: center;"> &copy; 2019 ChromaCache.com</p>
+        <p style = "text-align: center;">Created by Eyas Valdez and James Triantafylos</p>
+        <p style = "text-align: center;">Version 3.0</p>
+    </footer>
 </html>

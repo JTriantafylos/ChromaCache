@@ -147,11 +147,11 @@ $( document ).ready(function() {
                                 id = 'complementary-'+r;
                                 RGB = compl[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
@@ -163,11 +163,11 @@ $( document ).ready(function() {
                                 id = 'triadic-'+r;
                                 RGB = triad[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
@@ -179,11 +179,11 @@ $( document ).ready(function() {
                                 id = 'analogous-'+r;
                                 RGB = analo[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
@@ -195,11 +195,11 @@ $( document ).ready(function() {
                                 id = 'tetradic-'+r;
                                 RGB = tetr[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
@@ -211,11 +211,11 @@ $( document ).ready(function() {
                                 id = 'split-complementary-'+r;
                                 RGB = split[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
@@ -227,11 +227,11 @@ $( document ).ready(function() {
                                 id = 'tint-shade-'+r;
                                 RGB = tint[r];
                                 fillColor = 'rgb(' + RGB[0] + ', ' + RGB[1] + ', ' + RGB[2] + ')';
-                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="5%" height="45""></svg>');
+                                $('#harmony-'+harmony).append('<svg id="' + id + '" class="harmonyElement" xmlns="http://www.w3.org/2000/svg" width="100" height="100""></svg>');
                                 // eslint-disable-next-line no-undef
                                 d3.select('#' + id).append('rect')
                                     .attr('width', '100%')
-                                    .attr('height', '45')
+                                    .attr('height', '100')
                                     .attr('style', 'fill:' + fillColor);
                                 hexConvert = 'HEX: #' + RGB[0].toString(16) + RGB[1].toString(16) + RGB[2].toString(16);
                                 outputRGB = hexConvert.toUpperCase()+ ' <-----> '+('RBG: ' +RGB[0] + ', ' + RGB[1] + ', ' + RGB[2]);
