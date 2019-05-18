@@ -170,6 +170,9 @@ function createComplementaryPalette(RGB){
 
     //newRGB will be the RGB after the rearrangement
     var newRGB = [];
+    newRGB.push(Math.abs(RGB[0] - 255));
+    newRGB.push(Math.abs(RGB[1] - 255));
+    newRGB.push(Math.abs(RGB[2] - 255));
 
     /*
     * ------------------------------------------------
@@ -177,55 +180,55 @@ function createComplementaryPalette(RGB){
     * and which value is the smallest
     * ------------------------------------------------
     */
-    if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
-        //0 index has largest RGB value
-        if(RGB[1] <= RGB[2]){
-            //1 index has smallest value
-            newRGB.push(RGB[1]);
-            newRGB.push(RGB[0]);
-            newRGB.push((RGB[0]+RGB[1])-RGB[2]);
+    // if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
+    //     //0 index has largest RGB value
+    //     if(RGB[1] <= RGB[2]){
+    //         //1 index has smallest value
+    //         newRGB.push(RGB[1]);
+    //         newRGB.push(RGB[0]);
+    //         newRGB.push((RGB[0]+RGB[1])-RGB[2]);
 
-        }else{
-            //2 index has smallest value
-            newRGB.push(RGB[2]);
-            newRGB.push((RGB[0]+RGB[2])-RGB[1]);
-            newRGB.push(RGB[0]);
+    //     }else{
+    //         //2 index has smallest value
+    //         newRGB.push(RGB[2]);
+    //         newRGB.push((RGB[0]+RGB[2])-RGB[1]);
+    //         newRGB.push(RGB[0]);
             
-        }
+    //     }
 
-    }else if(RGB[1] > RGB[0] && RGB[1] >= RGB[2]){
-        //1 index has largest RGB value
-        if(RGB[0] <= RGB[2]){
-            //0 index has smallest value
-            newRGB.push(RGB[1]);
-            newRGB.push(RGB[0]);
-            newRGB.push((RGB[1]+RGB[0])-RGB[2]);
+    // }else if(RGB[1] > RGB[0] && RGB[1] >= RGB[2]){
+    //     //1 index has largest RGB value
+    //     if(RGB[0] <= RGB[2]){
+    //         //0 index has smallest value
+    //         newRGB.push(RGB[1]);
+    //         newRGB.push(RGB[0]);
+    //         newRGB.push((RGB[1]+RGB[0])-RGB[2]);
 
-        }else{
-            //2 index has smallest value
-            newRGB.push((RGB[1]+RGB[2])-RGB[0]);
-            newRGB.push(RGB[2]);
-            newRGB.push(RGB[1]);
+    //     }else{
+    //         //2 index has smallest value
+    //         newRGB.push((RGB[1]+RGB[2])-RGB[0]);
+    //         newRGB.push(RGB[2]);
+    //         newRGB.push(RGB[1]);
 
-        }
+    //     }
 
-    }else if(RGB[2] > RGB[1] && RGB[2] > RGB[0]){
-        //2 index has largest RGB value
-        if(RGB[0] <= RGB[1]){
-            //0 index has smallest value
-            newRGB.push(RGB[2]);
-            newRGB.push((RGB[2]+RGB[0])-RGB[1]);
-            newRGB.push(RGB[0]);
+    // }else if(RGB[2] > RGB[1] && RGB[2] > RGB[0]){
+    //     //2 index has largest RGB value
+    //     if(RGB[0] <= RGB[1]){
+    //         //0 index has smallest value
+    //         newRGB.push(RGB[2]);
+    //         newRGB.push((RGB[2]+RGB[0])-RGB[1]);
+    //         newRGB.push(RGB[0]);
 
-        }else{
-            //1 index has smallest value 
-            newRGB.push((RGB[2]+RGB[1])-RGB[0]);
-            newRGB.push(RGB[2]);
-            newRGB.push(RGB[1]);
+    //     }else{
+    //         //1 index has smallest value 
+    //         newRGB.push((RGB[2]+RGB[1])-RGB[0]);
+    //         newRGB.push(RGB[2]);
+    //         newRGB.push(RGB[1]);
 
-        }
+    //     }
 
-    }
+    // }
    
     subPalette.addSubColor(new SubColor(newRGB));
     
