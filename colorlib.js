@@ -169,66 +169,18 @@ function createComplementaryPalette(RGB){
     subPalette.addSubColor(new SubColor(RGB));
 
     //newRGB will be the RGB after the rearrangement
-    var newRGB = [];
-    newRGB.push(Math.abs(RGB[0] - 255));
-    newRGB.push(Math.abs(RGB[1] - 255));
-    newRGB.push(Math.abs(RGB[2] - 255));
+    var newRYB = RGBconvertToRYB(RGB);
 
-    /*
-    * ------------------------------------------------
-    * checking which values in the RGB is the largest
-    * and which value is the smallest
-    * ------------------------------------------------
-    */
-    // if(RGB[0] >= RGB[1] && RGB[0] >= RGB[2]){
-    //     //0 index has largest RGB value
-    //     if(RGB[1] <= RGB[2]){
-    //         //1 index has smallest value
-    //         newRGB.push(RGB[1]);
-    //         newRGB.push(RGB[0]);
-    //         newRGB.push((RGB[0]+RGB[1])-RGB[2]);
+    var theta = (Math.min(newRYB[0],newRYB[1],newRYB[2])) + (Math.max(newRYB[0],newRYB[1],newRYB[2]));
 
-    //     }else{
-    //         //2 index has smallest value
-    //         newRGB.push(RGB[2]);
-    //         newRGB.push((RGB[0]+RGB[2])-RGB[1]);
-    //         newRGB.push(RGB[0]);
-            
-    //     }
+    newRYB[0] = Math.abs(newRYB[0]-theta);
+    
+    newRYB[1] = Math.abs(newRYB[1]-theta);
+    
+    newRYB[2] = Math.abs(newRYB[2]-theta);
 
-    // }else if(RGB[1] > RGB[0] && RGB[1] >= RGB[2]){
-    //     //1 index has largest RGB value
-    //     if(RGB[0] <= RGB[2]){
-    //         //0 index has smallest value
-    //         newRGB.push(RGB[1]);
-    //         newRGB.push(RGB[0]);
-    //         newRGB.push((RGB[1]+RGB[0])-RGB[2]);
-
-    //     }else{
-    //         //2 index has smallest value
-    //         newRGB.push((RGB[1]+RGB[2])-RGB[0]);
-    //         newRGB.push(RGB[2]);
-    //         newRGB.push(RGB[1]);
-
-    //     }
-
-    // }else if(RGB[2] > RGB[1] && RGB[2] > RGB[0]){
-    //     //2 index has largest RGB value
-    //     if(RGB[0] <= RGB[1]){
-    //         //0 index has smallest value
-    //         newRGB.push(RGB[2]);
-    //         newRGB.push((RGB[2]+RGB[0])-RGB[1]);
-    //         newRGB.push(RGB[0]);
-
-    //     }else{
-    //         //1 index has smallest value 
-    //         newRGB.push((RGB[2]+RGB[1])-RGB[0]);
-    //         newRGB.push(RGB[2]);
-    //         newRGB.push(RGB[1]);
-
-    //     }
-
-    // }
+    var newRGB = RYBconvertToRGB(newRYB);
+    
    
     subPalette.addSubColor(new SubColor(newRGB));
     
@@ -607,6 +559,109 @@ function sortDictionary(dict){
     return tempDict;
     
 }
+function RGBconvertToRYB(RGB){
+    var red = RGB[0];
+    var green = RGB[1];
+    var blue = RGB[2];
+    // Remove the white from the color
+    var white = Math.min(red, green, blue);
+
+    red   -= white;
+    green -= white;
+    blue  -= white;
+
+    var maxGreen = Math.max(red, green, blue);
+
+    // Get the yellow out of the red+green
+
+    var yellow = Math.min(red, green);
+
+    red   -= yellow;
+    green -= yellow;
+
+    // If this unfortunate conversion combines blue and green, then cut each in half to
+    // preserve the value's maximum range.
+    if (blue > 0 && green > 0){
+        blue  /= 2;
+        green /= 2;
+    }
+
+    // Redistribute the remaining green.
+    yellow += green;
+    blue   += green;
+
+    // Normalize to values.
+    var maxYellow = Math.max(red, yellow, blue);
+
+    if (maxYellow > 0){
+        var theta = maxGreen / maxYellow;
+
+        red    *= theta;
+        yellow *= theta;
+        blue   *= theta;
+    }
+
+    // Add the white back in.
+    red    += white;
+    yellow += white;
+    blue   += white;
+
+    var ryb = [Math.floor(red), Math.floor(yellow), Math.floor(blue)];
+    
+    return ryb;
+}
+function RYBconvertToRGB(RYB){
+    var red = RYB[0];
+    var yellow = RYB[1];
+    var blue = RYB[2];
+
+    
+    // Remove the whiteness from the color.
+    var white = Math.min(red, yellow, blue);
+
+    red    -= white;
+    yellow -= white;
+    blue   -= white;
+
+    var maxYellow = Math.max(red, yellow, blue);
+
+    // Get the green out of the yellow and blue
+    var green = Math.min(yellow, blue);
+
+    yellow -= green;
+    blue   -= green;
+
+    if (blue > 0 && green > 0){
+        blue  *= 2.0;
+        green *= 2.0;
+    }
+
+    // Redistribute the remaining yellow.
+    red   += yellow;
+    green += yellow;
+
+    // Normalize to values.
+    var maxGreen = Math.max(red, green, blue);
+
+    if (maxGreen > 0){
+        var theta = maxYellow / maxGreen;
+
+        red   *= theta;
+        green *= theta;
+        blue  *= theta;
+    }
+
+    // Add the white back in.
+    red   += white;
+    green += white;
+    blue  += white;
+
+    // Save the RGB
+    var rgb = [Math.floor(red), Math.floor(green), Math.floor(blue)];
+    return rgb;
+}
+
+
 module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
         // Holds the URL's to be returned
