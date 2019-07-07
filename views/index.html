@@ -14,6 +14,7 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway|Montserrat" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="/css/style.css">
+        <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 
         <!-- Java Script -->
         <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -28,7 +29,12 @@
 
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light" >
-            <a class="navbar-brand" href="/">ChromaCache</a>
+            <div id= "home_button">
+                
+                <a class="navbar-brand" href="/">
+                    <img src= "/img/logo-0.png" alt="logo" width="320" height="168"></img>
+                </a>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -38,19 +44,19 @@
                         <li class="nav-item active">
 
                             <div onclick = "clickDropdown()" class="dropdown">
-                                <button class="dropbtn">Find Palette</button>
+                                <button class="dropbtn" style = "font-size: 32px">Find Palette</button>
                                 <div class="dropdown-content">
-                                    <a href="/">Find by Google Search</a>
+                                    <a href="/" >Find by Google Search</a>
                                     <a href="colorsearch">Find by Color Code</a>
                                 </div>
                             </div>
                             
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about" style="padding:16px">About</a>
+                            <a class="nav-link" href="about" style="padding:16px;font-size: 32px">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact-us" style="padding:16px">Contact Us</a>
+                            <a class="nav-link" href="contact-us" style="padding:16px;font-size: 32px">Contact Us</a>
                         </li>
                     </ul>
                 </div>
@@ -82,14 +88,14 @@
             }
         </script>
 
-        <div class="row">
+        <div id = "search_bar" class="row">
             <div class="col-2">
             </div>
 
             <div class="col-8">
-                <h1 id="title" class="text-center" style = "font-size:80px">Find a Palette</h1>
+                <h1 id="title" class="text-left" style = "padding-left:11%;font-size:80px;color: #ffffff;">FIND<b>PALETTE</b></h1>
                 <form id="searchForm" class="text-center">
-                    <input type="text" id="searchID" name="search" class="form-control form-rounded text-center" placeholder="Search for a style..." autocomplete="off">
+                    <input type="text" id="searchID" name="search" style = "padding-bottom: 3%;"class="form-control form-rounded text-center" autocomplete="off">
                     <button type="submit" id="searchSubmitID" class="btn btn-light">Search</button>
                 </form>
             </div> 
@@ -103,7 +109,7 @@
             <h1 id = "RGB-output" class= "text-center" style="font-size: 30px; padding:0px"></h1>
         </div>
 
-        <div class="row">
+        <div id = "result_display" class="row">
             <div class="col-1">
             </div>
 
@@ -150,8 +156,50 @@
                         <span id = harmony-5 style = "padding: 15px 0px 10px 150px;"></span>
                     </div>
             </fieldset>
-        </div>
-        <div>
+        </span>
+        <div id = "frequently_searched" style = "background-color: #ffffff;" class= "row">
+            <div class = "col-1">
+            </div>
+            <div class = "col-10" style = >
+                    
+                    <p style = "font-size: 55px;">FREQUENTLY<b style = "color:#FBB040;text-decoration: underline;">SEARCHED</b></p>
+                    <span>
+                        
+                        <fieldset style = "margin-bottom: 35px;">
+                            
+                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
+  
+                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style = "padding-right:20px;" ></polygon>
+                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+
+                            </svg>
+                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
+  
+                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+
+                            </svg>
+                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
+  
+                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+    
+                            </svg>
+                            
+                        </fieldset>
+
+                        <fieldset style = "margin-bottom: 35px;">
+                            <div></div>
+                        </fieldset>
+
+                        <fieldset style = "margin-bottom: 35px;">
+                            <div></div>
+                        </fieldset>
+                    </span>
+            </div>
+            
+            <div class = "col-1">
+            </div> 
+            
             <fieldset id = "FreqField" style="background-color: #ffffff;">
                 <legend id="FreqField" visible="true" style ="font-size:50px">Frequently Searched</legend>
 
@@ -194,8 +242,6 @@
     </body>
     <hr> 
     <footer>
-        <p style = "text-align: center;"> &copy; 2019 ChromaCache.com</p>
-        <p style = "text-align: center;">Created by Eyas Valdez and James Triantafylos</p>
-        <p style = "text-align: center;">Version 3.0</p>
+        
     </footer>
 </html>

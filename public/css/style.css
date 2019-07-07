@@ -1,19 +1,26 @@
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300&display=swap');
+/*H1  32px     
+H2  24px
+H3  18px    
+H4  16px
+H5  13px
+H6  10px
+*/
 body
 {
     background-color: #FBB040;
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #58595B;
 }
 
 nav
 {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'ROBOTO CONDENSED';
     padding: 0px;
 }
 
-h1
-{
-    font-family: 'Montserrat', sans-serif;
-    text-shadow: 2px 2px 3px #555555;
-}
+
 
 .row
 {
@@ -22,10 +29,24 @@ h1
     margin-right: 0px;
     margin-left: 0px;
 }
-
+.text-center {
+  text-align: center!important;
+  padding-top: 2%;
+  font-size:35px;
+}
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  position:relative;
+}
 .btn
 {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+  text-align: right;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .paletteElement
@@ -40,14 +61,14 @@ h1
 
 #searchID
 {
-    margin-top: 32px;
+    /*margin-top: 32px;*/
     margin-bottom: 32px;
     margin-left: auto;
     margin-right: auto;
     width: 80%;
     border-radius: 12px;
 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24);
+    /*box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.24); */
 }
 
 #loadingMessage
@@ -149,6 +170,7 @@ h1
     background-color: #f1f1f1;
     min-width: 160px;
     overflow: auto;
+    font-size:24px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -164,7 +186,8 @@ h1
 .dropdown:hover {color: #ddd;}
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {
+  background-color: #ddd;}
 
 
 .dropdown:hover .dropdown-content {display: block;}
@@ -194,11 +217,47 @@ fieldset legend {
   color:black;
   padding: 2px;
 }
-fieldset {
+/* fieldset {
   border: 1px solid black; 
   border-color: black; 
   border-radius: 4px; 
   padding:16px; 
   margin: 90px;
+} */
+
+fieldset{
+  /* subject to change when palette loads */
+  
+  margin : 0px;
+  border: 2px solid #80808075;
+  /* border-color: grey; */
+  border-radius: 50px;
+  /* x, y offset, blur, spread */
+  box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.16);
+}
+.hexagon{
+  width: 100px;
+  height: 100px;
+  background: #000000;
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+
 }
 
+.hexagon:before,
+.hexagon:after{
+  content: ' ';
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  position: absolute;
+}
+
+.hexagon:before{
+  transform: rotate(60deg);
+}
+.hexagon::after{
+  transform: rotate(-60deg);
+}
