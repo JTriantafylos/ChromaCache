@@ -21,7 +21,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongo-express": "^0.51.2",
-    "mongoose": "^5.4.17",
+    "mongoose": "^5.7.5",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
