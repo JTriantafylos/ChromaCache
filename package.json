@@ -20,7 +20,7 @@
     "@google-cloud/vision": "^0.25.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mongo-express": "^0.51.2",
+    "mongo-express": "^0.54.0",
     "mongoose": "^5.7.5",
     "node-fetch": "^2.3.0"
   },
