@@ -22,40 +22,50 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="/js/getrequest.js"></script>
         <script src="/js/postrequest.js"></script>
+        
+        <!-- TODO get teams contact info
+        TODO scroll up button -->
     </head>
 
     <body>
+        <!-- NAVIGATION BAR DISPLAY -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light" >
-            <a class="navbar-brand" href="/">ChromaCache</a>
+            <div id= "home_button">
+                
+                <a class="navbar-brand" href="/">
+                    <img src= "/img/logo-0.png" alt="logo" width="320" height="168"></img>
+                </a>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
     
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
 
-                        <div onclick = "clickDropdown()" class="dropdown">
-                            <button class="dropbtn">Find Palette</button>
-                            <div class="dropdown-content">
-                                <a href="/">Find by Google Search</a>
-                                <a href="colorsearch">Find by Color Code</a>
+                            <div onclick = "clickDropdown()" class="dropdown">
+                                <button class="dropbtn" style = "font-size: 32px">Find Palette</button>
+                                <div class="dropdown-content">
+                                    <a href="/" >Find by Google Search</a>
+                                    <a href="colorsearch">Find by Color Code</a>
+                                </div>
                             </div>
-                        </div>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about" style="padding:16px">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact-us" style="padding:16px">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-
-            
+                            
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about" style="padding:16px;font-size: 32px">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact-us" style="padding:16px;font-size: 32px">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
         </nav> 
+        <!-- NAVIGATION BAR DISPLAY -->
+            
 
+        <!-- NAVIGATION BAR SCRIPT -->
         <script>
             /* When the user clicks on the button, 
             toggle between hiding and showing the dropdown content */
@@ -78,7 +88,9 @@
                 }
             }
         </script>
-        <div class="row">
+        <!-- NAVIGATION BAR SCRIPT -->
+
+        <div class="row" id = "shared_github_info">
             <div class="col-2">
             </div>
 
@@ -86,11 +98,83 @@
                 <h1 id="title" class="text-center">ChromaCache</h1>
                 <h2 class="text-center">Created for CUHacking 2019</h2>
                 <h3 class="text-center">By <a target="_blank" href="https://github.com/jtriantafylos">James Triantafylos</a> and <a target="_blank" href="https://github.com/spiltbeans">Eyas Valdez</a></h3>
+            </div>
+
             <div class="col-2">
+            </div>
+
+        </div>
+
+        <div class="row" id="eyas-contact">
+            <div class = "col-3">
+    
+            </div>
+    
+            <div class="col-6" style="border-radius: 15px; padding-bottom:2%;background-color:#ffffff">
+                <h2 class = "text-center">Eyas' info:</h2>
+                <h3 class="text-center"> <b>Twitter: </b><a target="_blank" href="https://twitter.com/eyas_valdez">@eyas_valdez</a></h3>
+                <h3 class="text-center"><b>Facebook: </b><a target="_blank" href="https://www.facebook.com/eyas.valdez">Eyas Valdez</a></h3>
+                <h3 class="text-center"><b>Linkedin: </b><a target="_blank" href="https://www.linkedin.com/in/eyas-valdez-699475172">Eyas Valdez</a></h3>
+                <h3 class="text-center"> <b>Reddit: </b> <a href = "https://www.reddit.com/user/Cronus_The_Titan" target="_blank">Cronus_The_Titan</a></h3>
+                <h3 class="text-center"> <b>Email: </b> eyasvaldez7@gmail.com</h3>
+                <h3 class="text-center"> <b>Instagram: </b> eyas_valdez</h3>
+                <h3 class="text-center"> <b>Snapchat: </b> eyasvaldez_7</h3>
+            </div>
+    
+            <div class = "col-3">
+    
+            </div>
+        </div>
+
+        <div class="row" id="james-contact" >
+            <div class = "col-3">
+    
+            </div>
+    
+            <div class="col-6" style="border-radius: 15px; padding-bottom:2%;background-color:#ffffff">
+                <h2 class = "text-center">James' info:</h2>
+                <h3 class="text-center"> <b>Twitter: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"><b>Facebook: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"><b>Linkedin: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"> <b>Reddit: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"> <b>Email: </b></h3>
+                <h3 class="text-center"> <b>Instagram: </b></h3>
+                <h3 class="text-center"> <b>Snapchat: </b></h3>
+            </div>
+    
+            <div class = "col-3">
+    
+            </div>
+        </div>
+
+        <div class="row" id="kyla-contact">
+            <div class = "col-3">
+    
+            </div>
+    
+            <div class="col-6" style="border-radius: 15px; padding-bottom:2%;background-color:#ffffff">
+                <h2 class = "text-center">Kyla's info:</h2>
+                <h3 class="text-center"> <b>Twitter: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"><b>Facebook: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"><b>Linkedin: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"> <b>Reddit: </b><a target="_blank" href=""></a></h3>
+                <h3 class="text-center"> <b>Email: </b></h3>
+                <h3 class="text-center"> <b>Instagram: </b></h3>
+                <h3 class="text-center"> <b>Snapchat: </b></h3>
+            </div>
+    
+            <div class = "col-3">
+    
             </div>
         </div>
     </body>
 
-     
+    <hr> 
+    <footer>
+        <p style = "text-align: center;"> &copy; 2019 ChromaCache.com</p>
+        <p style = "text-align: center;">Created by Eyas Valdez and James Triantafylos</p>
+        <p style = "text-align: center;">Designs done by Kyla Di Perna</p>
+        <p style = "text-align: center;">Version 3.1</p>
+    </footer>
     
 </html>

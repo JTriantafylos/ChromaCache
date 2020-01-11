@@ -22,40 +22,51 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="/js/getrequest.js"></script>
         <script src="/js/postrequest.js"></script>
+
+        <!-- -TODO put disclaimer
+        TODO put the explanation
+        TODO scroll up button -->
     </head>
 
     <body>
+        <!-- NAVIGATION BAR DISPLAY -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light" >
-            <a class="navbar-brand" href="/">ChromaCache</a>
+            <div id= "home_button">
+                
+                <a class="navbar-brand" href="/">
+                    <img src= "/img/logo-0.png" alt="logo" width="320" height="168"></img>
+                </a>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
     
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
 
-                        <div onclick = "clickDropdown()" class="dropdown">
-                            <button class="dropbtn">Find Palette</button>
-                            <div class="dropdown-content">
-                                <a href="/">Find by Google Search</a>
-                                <a href="colorsearch">Find by Color Code</a>
+                            <div onclick = "clickDropdown()" class="dropdown">
+                                <button class="dropbtn" style = "font-size: 32px">Find Palette</button>
+                                <div class="dropdown-content">
+                                    <a href="/" >Find by Google Search</a>
+                                    <a href="colorsearch">Find by Color Code</a>
+                                </div>
                             </div>
-                        </div>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about" style="padding:16px">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact-us" style="padding:16px">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-
-            
+                            
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about" style="padding:16px;font-size: 32px">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact-us" style="padding:16px;font-size: 32px">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
         </nav> 
+        <!-- NAVIGATION BAR DISPLAY -->
+            
 
+        <!-- NAVIGATION BAR SCRIPT -->
         <script>
             /* When the user clicks on the button, 
             toggle between hiding and showing the dropdown content */
@@ -78,23 +89,201 @@
                 }
             }
         </script>
-        <div class="row">
-            <div class="col-2">
-            </div>
+        <!-- NAVIGATION BAR SCRIPT -->
 
-            <div class="col-8">
-                <h1 id="title" class="text-center">ChromaCache</h1>
-                <h2 class="text-center">Created for CUHacking 2019</h2>
-                <h3 class="text-center">By <a target="_blank" href="https://github.com/jtriantafylos">James Triantafylos</a> and <a target="_blank" href="https://github.com/spiltbeans">Eyas Valdez</a></h3>
-            <div class="col-2">
+        <!-- TODO WHO ARE WE
+        -TODO SUMMARY
+        TODO HARMONIES
+        -TODO GEOMETRY
+        -TODO MATH
+        TODO HARMONY ALGORITHMS
+        -TODO DISCLAIMER -->
+        
+        <!-- WHO ARE WE -->
+        <div class="row" id = "explanation" >
+            <div class="col-1">
+            </div> 
+            <!-- TODO put links to our about me section when clicking the persons name -->
+            <div class="col-10" style="border-radius: 15px; padding-bottom:2%;background-color:#ffffff">
+                <h1 id="title-who-are-we" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>Who Are We?</b></h1>
+                <h1 id = "title-eyas" style="padding-left:150px;"><b>Eyas</b></h1>
+                <h3 id = "desc-eyas" style="padding-left:50px;text-indent: 2%;">My mom bought my sister a N64 when I was 5 years old and I've been playing games ever since. years old, starting from the N6
+                    I have been coding since I was 14 years old. I started wh</h3>
+                <h1 id = "title-james" style="padding-left:150px;"><b>James</b></h1>
+                <h3 id = "desc-james" style="padding-left:50px;text-indent: 2%;">I'm a dumb dumb slacker who never pushes his commits and can't wake up for morning classes :)</h3>
+            </div>
+            <div class="col-1">
             </div>
         </div>
+        <!-- WHO ARE WE -->
+        
+        <!-- SUMMARY -->
+        <div class="row" id = "summary" >
+            <div class="col-1">
+            </div> 
+
+            <div class="col-10" style="border-radius: 15px;padding-bottom:2%; background-color:#ffffff">
+                <h1 id="title-summary" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>What Is This Website?</b></h1>
+                <h3 id = "desc-summary-1" style="padding-left:50px; text-indent: 2%;">This website was created to be submitted to CUHacking 2019</h3>
+                <h3 id = "desc-summary-2" style="padding-left:50px;text-indent: 2%;">Our goal was to give a user an interesting and aesthetically pleasing colour palette used for design at the push of a button. However, it occurred to us that the idea of what is “aesthetically pleasing” is to the interpretation of the user. So, this was our solution:</h3>
+                
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <!-- SUMMARY -->
+
+        <!-- HARMONIES -->
+        <div class="row" id = "harmony" >
+            <div class="col-1">
+            </div> 
+
+            <div class="col-10" style="border-radius: 15px;padding-bottom:2%; background-color:#ffffff">
+                <h1 id="title-harmony" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>What Is A Colour Harmony?</b></h1>
+                <h3 id = "desc-harmony-1" style="padding-left:50px; text-indent: 2%;">If you look at colours as a geometric shape (a wheel) instead of as a spectrum, you are able to form relations between two or more colours on the colour wheel.</h3>
+                <h3 id = "desc-harmony-2" class="text-center">* VISUAL *</h3>
+                
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <!-- HARMONIES -->
+
+        <!-- GEOMETRY/MATH -->
+        <div class="row" id = "geo-math" >
+            <div class="col-1">
+            </div> 
+
+            <div class="col-10" style="border-radius: 15px;padding-bottom:2%; background-color:#ffffff">
+                <h1 id="title-geo-math" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>How Do We Find A Colour Harmony?</b></h1>
+                <h1 id = "title-geometric" style="padding-left:150px;"><b>Geometric</b></h1>
+                <h3 id = "desc-geometry-1" style="padding-left:50px; text-indent: 2%;">One way of translating these relations into code is to place a pattern on the colour wheel with pointers on the vertices to detect what region of the colour wheel it is located at, and then the original colour would change position, the shape would contort and revolve around a central axis. Inspired by <a target="_blank" href="https://www.sessions.edu/color-calculator/">Sessions College</a target="_blank"></h3>
+                
+                <h1 id = "title-math" style="padding-left:150px;"><b>Math</b></h1>
+                <h3 id = "desc-math-1" style="padding-left:50px; text-indent: 2%;">However, through much hard work we were able to find relations between the values of each harmony and develop a set of steps that would take a colour code provided in RGB values and through mathematical processes, find the relations between the different colour harmonies.</h3>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <!-- GEOMETRY/MATH -->
+
+        <!-- ALGORITHMS -->
+        <div class="row" id = "algorithms" >
+            <div class="col-1">
+            </div> 
+
+            <div class="col-10" style="border-radius: 15px;padding-bottom:2%; background-color:#ffffff">
+                <h1 id="title-algorithms" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>Colour Harmony Algorithms</b></h1>
+                <div id = "index-list" class="text-center">
+                    <h3>i. RGB to RYB</h3>
+                    <h3>ii. RYB to RGB</h3>
+                    <h3>iii. Complementary</h3>
+                    <h3>iv. Triadic</h3>
+                    <h3>v. Analogous</h3>
+                    <h3>vi. Tetradic</h3>
+                    <h3>vii. Split-Complementary</h3>
+                    <h3>viii. Tint Map</h3>
+                </div>
+                <h1 id = "title-rgb-ryb" style="padding-left:150px;"><b>RGB to RYB</b></h1>
+                <h3 id = "desc-rgb-ryb-1" style="padding-left:50px; text-indent: 2%;">This algorithm was instrumental to the development of all other colour harmony algorithms. This is because if kept in RGB, as you adjust the G value, you influence the amount of Blue that exists in a colour code (because green is made of yellow and blue). To split up and isolate these values makes the algorithms easier to develope and to understand.</h3>
+                <h3 id = "desc-rgb-ryb-2" style="padding-left:50px; text-indent: 25%;"><b>1. </b>Determine the minimum value of RGB and give it value &omega;</h3>
+                <h3 id = "desc-rgb-ryb-3" style="padding-left:50px; text-indent: 25%;"><b>2. </b>Subtract &omega; from Red, Green and Blue values</h3>
+                <h3 id = "desc-rgb-ryb-4" style="padding-left:50px; text-indent: 30%;">R = R - &omega;</h3>
+                <h3 id = "desc-rgb-ryb-5" style="padding-left:50px; text-indent: 30%;">G = G - &omega;</h3>
+                <h3 id = "desc-rgb-ryb-6" style="padding-left:50px; text-indent: 30%;">B = B - &omega;</h3>
+                <h3 id = "desc-rgb-ryb-7" style="padding-left:50px; text-indent: 25%;"><b>3. </b>Determine maximum value of RGB and give it value &theta;</h3>
+                <h3 id = "desc-rgb-ryb-8" style="padding-left:50px; text-indent: 25%;"><b>4. </b>Determine minimum value Red and Green and give it value &gamma;</h3>
+                <h3 id = "desc-rgb-ryb-9" style="padding-left:50px; text-indent: 25%;"><b>5. </b>Subtract &gamma; from Red and Green values</h3>
+                <h3 id = "desc-rgb-ryb-10" style="padding-left:50px; text-indent: 30%;">R = R - &gamma;</h3>
+                <h3 id = "desc-rgb-ryb-11" style="padding-left:50px; text-indent: 30%;">G = G - &gamma;</h3>
+                <h3 id = "desc-rgb-ryb-12" style="padding-left:50px; text-indent: 25%;"><b>6. </b>If Blue and Green are greater than 0, then divide B and G values by 2</h3>
+                <h3 id = "desc-rgb-ryb-13" style="padding-left:50px; text-indent: 25%;"><b>7. </b>Add G value to &gamma; and B values</h3>
+                <h3 id = "desc-rgb-ryb-14" style="padding-left:50px; text-indent: 30%;">&gamma; = &gamma; + G</h3>
+                <h3 id = "desc-rgb-ryb-15" style="padding-left:50px; text-indent: 30%;">B = B + G</h3>
+                <h3 id = "desc-rgb-ryb-16" style="padding-left:50px; text-indent: 25%;"><b>8. </b>Determine the minimum value of RGB and give it value &phi;</h3>
+                <h3 id = "desc-rgb-ryb-17" style="padding-left:50px; text-indent: 25%;"><b>9. </b>If &phi; is greater than 0, then divide &theta; by &phi; and give it value &Delta;. Then multiply R, &gamma; and B values by &Delta;</h3>
+                <h3 id = "desc-rgb-ryb-18" style="padding-left:50px; text-indent: 30%;">&Delta; = &theta; &divide; &phi;</h3>
+                <h3 id = "desc-rgb-ryb-19" style="padding-left:50px; text-indent: 30%;">R = R &times; &Delta;</h3>
+                <h3 id = "desc-rgb-ryb-20" style="padding-left:50px; text-indent: 30%;">&gamma; = &gamma; &times; &Delta;</h3>
+                <h3 id = "desc-rgb-ryb-21" style="padding-left:50px; text-indent: 30%;">B = B &times; &Delta;</h3>
+                <h3 id = "desc-rgb-ryb-22" style="padding-left:50px; text-indent: 25%;"><b>10. </b>Add &omega; value to R, &gamma; and B values</h3>
+                <h3 id = "desc-rgb-ryb-22" style="padding-left:50px; text-indent: 25%;"><b>11. </b>Finished!</h3>
+
+                <h1 id = "title-ryb-rgb" style="padding-left:150px;"><b>RYB to RGB</b></h1>
+                <h3 id = "desc-ryb-rgb-1" style="padding-left:50px; text-indent: 2%;">This algorithm is also very important because we use RYB values in algorithm calculations, but we display the conventional RGB values</h3>
+                <h3 id = "desc-ryb-rgb-2" style="padding-left:50px; text-indent: 25%;"><b>1. </b>Determine the minimum value of RYB and give it value &omega;</h3>
+                <h3 id = "desc-ryb-rgb-3" style="padding-left:50px; text-indent: 25%;"><b>2. </b>Subtract &omega; from Red, Yellow and Blue values</h3>
+                <h3 id = "desc-ryb-rgb-4" style="padding-left:50px; text-indent: 30%;">R = R - &omega;</h3>
+                <h3 id = "desc-ryb-rgb-5" style="padding-left:50px; text-indent: 30%;">Y = Y - &omega;</h3>
+                <h3 id = "desc-ryb-rgb-6" style="padding-left:50px; text-indent: 30%;">B = B - &omega;</h3>
+                <h3 id = "desc-ryb-rgb-7" style="padding-left:50px; text-indent: 25%;"><b>3. </b>Determine maximum value of RYB and give it value &phi;</h3>
+                <h3 id = "desc-ryb-rgb-8" style="padding-left:50px; text-indent: 25%;"><b>4. </b>Determine minimum value Yellow and Blue and give it value G;</h3>
+                <h3 id = "desc-ryb-rgb-9" style="padding-left:50px; text-indent: 25%;"><b>5. </b>Subtract G from Yellow and Blue values</h3>
+                <h3 id = "desc-ryb-rgb-10" style="padding-left:50px; text-indent: 30%;">Y = Y - G</h3>
+                <h3 id = "desc-ryb-rgb-11" style="padding-left:50px; text-indent: 30%;">B = B - G</h3>
+                <h3 id = "desc-ryb-rgb-12" style="padding-left:50px; text-indent: 25%;"><b>6. </b>If Blue and Green are greater than 0, then multiply B and G values by 2</h3>
+                <h3 id = "desc-ryb-rgb-13" style="padding-left:50px; text-indent: 25%;"><b>7. </b>Add Y value to G and R values</h3>
+                <h3 id = "desc-ryb-rgb-14" style="padding-left:50px; text-indent: 30%;">G = G + Y</h3>
+                <h3 id = "desc-ryb-rgb-15" style="padding-left:50px; text-indent: 30%;">R = R + Y</h3>
+                <h3 id = "desc-ryb-rgb-16" style="padding-left:50px; text-indent: 25%;"><b>8. </b>Determine the maximum value of RGB and give it value &theta;</h3>
+                <h3 id = "desc-ryb-rgb-17" style="padding-left:50px; text-indent: 25%;"><b>9. </b>If &theta; is greater than 0, then divide &phi; by &theta; and give it value &Delta;. Then multiply R, G and B values by &Delta;</h3>
+                <h3 id = "desc-ryb-rgb-18" style="padding-left:50px; text-indent: 30%;">&Delta; = &theta; &divide; &phi;</h3>
+                <h3 id = "desc-ryb-rgb-19" style="padding-left:50px; text-indent: 30%;">R = R &times; &Delta;</h3>
+                <h3 id = "desc-ryb-rgb-20" style="padding-left:50px; text-indent: 30%;">G = G &times; &Delta;</h3>
+                <h3 id = "desc-ryb-rgb-21" style="padding-left:50px; text-indent: 30%;">B = B &times; &Delta;</h3>
+                <h3 id = "desc-ryb-rgb-22" style="padding-left:50px; text-indent: 25%;"><b>10. </b>Add &omega; value to R, G and B values</h3>
+                <h3 id = "desc-ryb-rgb-22" style="padding-left:50px; text-indent: 25%;"><b>11. </b>Finished!</h3>
+
+                <h1 id = "title-complementary" style="padding-left:150px;"><b>Complementary</b></h1>
+                <h3 id = "desc-complementary-1" style="padding-left:50px; text-indent: 25%;"><b>1. </b>Convert RGB values to RYB</h3>
+                <h3 id = "desc-complementary-2" style="padding-left:50px; text-indent: 25%;"><b>2. </b>Subtract each value by 255. Take the absolute values from negative numbers</h3>
+                <h3 id = "desc-complementary-3" style="padding-left:50px; text-indent: 25%;"><b>3. </b>Convert RYB values to RGB</h3>
+                <h3 id = "desc-complementary-4" style="padding-left:50px; text-indent: 25%;"><b>4. </b>Finished!</h3>
+            
+                <h1 id = "title-triadic" style="padding-left:150px;"><b>Triadic</b></h1>
+
+                <h1 id = "title-analogous" style="padding-left:150px;"><b>Analogous</b></h1>
+
+                <h1 id = "title-tetradic" style="padding-left:150px;"><b>Tetradic</b></h1>
+
+                <h1 id = "title-split-complementary" style="padding-left:150px;"><b>Split-Complementary</b></h1>
+                <h3 id = "desc-split-complementary-1" style="padding-left:50px; text-indent: 25%;"><b>1. </b>Find the Analogous colour harmony</h3>
+                <h3 id = "desc-split-complementary-2" style="padding-left:50px; text-indent: 25%;"><b>2. </b>Find the complementary of the Analogous colour harmony</h3>
+                <h3 id = "desc-split-complementary-3" style="padding-left:50px; text-indent: 25%;"><b>4. </b>Finished!</h3>
+
+                <h1 id = "title-tint-shade-map" style="padding-left:150px;"><b>Tint-Shade Map</b></h1>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <!-- ALGORITHMS -->
+
+        <!-- DISCLAIMER -->
+        <div class="row" id = "disclaimer" >
+            <div class="col-1">
+            </div> 
+
+            <div class="col-10" style="border-radius: 15px;padding-bottom:2%; background-color:#ffffff">
+    
+                <h1 id="title-disclaimer" class="text-center" style="font-size: xxx-large; text-decoration: underline;"><b>Disclaimer</b></h1>
+                <h3 id = "desc-disclaimer-1" style="padding-left:50px; text-indent: 2%;">This code is subject to fair use and source code can be found <a target="_blank" href="https://github.com/JTriantafylos/ChromaCache">here</a target="_blank">. This product is not intended for commercial use, but rather to showcase the different techniques and our prowess as coders.</h3>
+                
+               </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <!-- DISCLAIMER -->
+
+        
+
+        
     </body>
 
     <hr> 
     <footer>
         <p style = "text-align: center;"> &copy; 2019 ChromaCache.com</p>
         <p style = "text-align: center;">Created by Eyas Valdez and James Triantafylos</p>
-        <p style = "text-align: center;">Version 3.0</p>
+        <p style = "text-align: center;">Designs done by Kyla Di Perna</p>
+        <p style = "text-align: center;">Version 3.1</p>
     </footer>
 </html>

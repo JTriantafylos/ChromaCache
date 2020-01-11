@@ -24,10 +24,14 @@
 
         <script src="/js/postdata.js"></script>
         
-        
+        <!-- TODO make button to scroll up
+        -TODO hide harmonies when no search request
+        -TODO display frequencies indefinitely -->
     </head>
 
     <body>
+        
+        <!-- NAVIGATION BAR DISPLAY -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light" >
             <div id= "home_button">
                 
@@ -60,11 +64,11 @@
                         </li>
                     </ul>
                 </div>
-
-            
         </nav> 
-        
+        <!-- NAVIGATION BAR DISPLAY -->
             
+
+        <!-- NAVIGATION BAR SCRIPT -->
         <script>
             /* When the user clicks on the button, 
             toggle between hiding and showing the dropdown content */
@@ -87,10 +91,13 @@
                 }
             }
         </script>
+        <!-- NAVIGATION BAR SCRIPT -->
 
+        <p></p>
+
+        <!-- SEARCH BAR DISPLAY -->
         <div id = "search_bar" class="row">
-            <div class="col-2">
-            </div>
+            <div class="col-2"></div>
 
             <div class="col-8">
                 <h1 id="title" class="text-left" style = "padding-left:11%;font-size:80px;color: #ffffff;">FIND<b>PALETTE</b></h1>
@@ -100,9 +107,10 @@
                 </form>
             </div> 
 
-            <div class="col-2">
-            </div>
+            <div class="col-2"></div>
         </div>
+        <!-- SEARCH BAR DISPLAY -->
+
 
         <!-- displaying the RGB after clicking the element-->
         <div>
@@ -121,13 +129,50 @@
             <div class="col-1">
             </div>
         </div>
+         <!-- displaying the RGB after clicking the element-->
 
-        <span>
-            <fieldset id = "HarmField" style="background-color: #ffffff;">
-                <legend id="HarmLegend" visible="true" style ="font-size:50px">Harmonies</legend>
+        <!-- padding:up,right,down, left -->
+        <!-- COLOR HARMONIES DISPLAY -->
+        <div id = "color-harmonies" style = "display:none;" class= "row">
+            <div class = "col-3"></div>
+            <!-- TODO make the harmony display look better -->
+            <div id = 'color-harmonies-block' class = "col-6" style="background-color: #ffffff;border-radius: 15px; padding-bottom:2%;">
+                    
+                    <p class = "text-center" style = "font-size: 55px;">Color<b style = "color:#FBB040;text-decoration: underline;">Harmonies</b></p>
+                    <span>  
+                            <div>
+                                <span id ="harmony-name-0" style = "font-size:40px; margin-left:5%;">Complementary</span>
+                                <span id = "harmony-name-3" style = "font-size:40px;">Tetradic</span>
+                            </div>
+                            
+                            <div>
+                                <span><fieldset id ="harmony-3" style = "margin-bottom: 35px;"></fieldset>
+                                <fieldset id ="harmony-0" style = "margin-bottom: 35px;"></fieldset></span>
+                            </div>
+                            
+                            
+                            
+    
+                            <span id = "harmony-name-2" style = "font-size:40px;margin-left:5%;margin-right: 25%;">Analogous</span>
+                            <span id = "harmony-name-1" style = "font-size:40px;">Triadic</span>
+                            <fieldset id ="harmony-1" style = "margin-bottom: 35px;"></fieldset>
+                            <fieldset id ="harmony-2" style = "margin-bottom: 35px;"></fieldset> 
+                            
+                        
+                            <span id = "harmony-name-4" style = "font-size:40px;margin-left:5%;margin-right: 25%;">Split-Complementary</span>
+                            <span id = "harmony-name-5" style = "font-size:40px;">Tint-Shade Map</span>
 
+                            <fieldset id ="harmony-4" style = "margin-bottom: 35px;"></fieldset>
+                            <fieldset id ="harmony-5" style = "margin-bottom: 35px;"></fieldset>
+                    </span>
+                    
+            </div>
+
+            <div class = "col-3"></div>
+            <!-- <fieldset id = "HarmField" style="background-color: #ffffff;">
+                <legend id="HarmLegend" visible="true" style ="font-size:50px">Harmonies</le4end>4
                 <div>
-                        <!-- padding:up,right,down, left -->
+                        
                         <span style = "font-size: 40px; padding: 10px 397px 10px 100px;">Complementary</span>
                         <span style = "font-size: 40px;padding: 10px 0px 10px 150px;">Triadic</span>
                     </div>
@@ -155,93 +200,73 @@
                         <span id = harmony-4 style = "padding: 15px 379px 10px 100px;"></span>
                         <span id = harmony-5 style = "padding: 15px 0px 10px 150px;"></span>
                     </div>
-            </fieldset>
-        </span>
+            </fieldset> -->
+        </div>
+        <!-- COLOR HARMONIES DISPLAY -->
+
+        <!-- FREQUENTLY SEARCHED DISPLAY -->
         <div id = "frequently_searched" style = "background-color: #ffffff;" class= "row">
-            <div class = "col-1">
-            </div>
-            <div class = "col-10" style = >
+            <div class = "col-1"></div>
+
+            <div class = "col-10">
                     
-                    <p style = "font-size: 55px;">FREQUENTLY<b style = "color:#FBB040;text-decoration: underline;">SEARCHED</b></p>
-                    <span>
+                    <p style = "font-size: 55px;margin-top:2%;">FREQUENTLY<b style = "color:#FBB040;text-decoration: underline;">SEARCHED</b></p>
+                    <span>  
+                        <div id ="frequent-name-0" style = "font-size:40px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-0" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-1" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-1" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-2" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-2" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-3" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-3" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-4" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-4" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-5" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-5" style = "margin-bottom: 35px;"></fieldset>
+
+                        <div id = "frequent-name-6" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-6" style = "margin-bottom: 35px;"></fieldset>
+
                         
-                        <fieldset style = "margin-bottom: 35px;">
-                            
-                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
-  
-                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style = "padding-right:20px;" ></polygon>
-                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
-                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+                        <div id = "frequent-name-7" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-7" style = "margin-bottom: 35px;"></fieldset>
 
-                            </svg>
-                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
-  
-                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
+                        
+                        <div id = "frequent-name-8" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-8" style = "margin-bottom: 35px;"></fieldset>
 
-                            </svg>
-                            <svg id="color-fill" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" style = "padding:0; margin:0;">
-  
-                                <polygon class="hex" points="120,60 90,111 30,111 0,60 30,9 90,9" style ></polygon>
-    
-                            </svg>
-                            
-                        </fieldset>
-
-                        <fieldset style = "margin-bottom: 35px;">
-                            <div></div>
-                        </fieldset>
-
-                        <fieldset style = "margin-bottom: 35px;">
-                            <div></div>
-                        </fieldset>
+                        
+                        <div id = "frequent-name-9" style = "font-size:30px;margin-left:5%;"></div>
+                        <fieldset id ="frequent-9" style = "margin-bottom: 35px;"></fieldset>
                     </span>
             </div>
             
-            <div class = "col-1">
-            </div> 
+            <div class = "col-1"></div> 
             
-            <fieldset id = "FreqField" style="background-color: #ffffff;">
-                <legend id="FreqField" visible="true" style ="font-size:50px">Frequently Searched</legend>
-
-                <span>
-                    <div id ="frequent-name-0"></div>
-                    <div id="frequent-0" class="text-center"></div>
-                    <div id = "frequent-name-1"></div>
-                    <div id="frequent-1" class="text-center">
-                    </div>
-                    <div id = "frequent-name-2"></div>
-                    <div id="frequent-2" class="text-center">
-                    </div>
-                    <div id = "frequent-name-3"></div>
-                    <div id="frequent-3" class="text-center">
-                    </div>
-                    <div id = "frequent-name-4"></div>
-                    <div id="frequent-4" class="text-center">
-                    </div>
-                </span>
-                <span>
-                    <div id = "frequent-name-5"></div>
-                    <div id="frequent-5" class="text-center">
-                    </div>
-                    <div id = "frequent-name-6"></div>
-                    <div id="frequent-6" class="text-center">
-                    </div>
-                    <div id = "frequent-name-7"></div>
-                    <div id="frequent-7" class="text-center">
-                    </div>
-                    <div id = "frequent-name-8"></div>
-                    <div id="frequent-8" class="text-center">
-                    </div>
-                    <div id = "frequent-name-9"></div>
-                    <div id="frequent-9" class="text-center">
-                    </div>
-                </span>
-                
-            </fieldset>
         </div>
+        <!-- FREQUENTLY SEARCHED DISPLAY -->
+
+        <!-- <a href=""  onclick="functionforscroll('')">
+                <div >Scroll Down</div></a>
+        <script>
+            var functionforscroll = function(id){
+                var reqId = "#"+id;
+                window.scrollTo(0, $(reqId).offset().top-85);
+            }
+        </script> -->
     </body>
     <hr> 
-    <footer>
+    <footer>    
+        <p style = "text-align: center;"> &copy; 2019 ChromaCache.com</p>
+        <p style = "text-align: center;">Created by Eyas Valdez and James Triantafylos</p>
+        <p style = "text-align: center;">Designs done by Kyla Di Perna</p>
+        <p style = "text-align: center;">Version 3.1</p>
         
     </footer>
 </html>

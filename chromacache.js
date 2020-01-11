@@ -174,11 +174,12 @@ webServerApp.post('/api/clientMessage', async function (req, res) {
             
         });
     }
-    
+   
     // Sends the dominant palette to the client
     async function sendToFrontEnd(palette){
  
         res.send([palette, await colorLib.updateFrequentDb()]);
     }
+    
     
 });

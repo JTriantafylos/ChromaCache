@@ -7,6 +7,10 @@ H4  16px
 H5  13px
 H6  10px
 */
+
+html{
+  scroll-behavior: smooth;
+}
 body
 {
     background-color: #FBB040;

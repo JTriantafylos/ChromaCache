@@ -36,3 +36,4 @@ See us at [ChromaCache](http://www.chromacache.com/)!
 - [ ] Update HTML
 
  Created **James Triantafylos (@JTriantafylos)** & **Eyas Valdez (@SpiltBeans)**.
+ Designs done by **Kyla Di Perna (https://www.linkedin.com/in/kyla-di-perna-b4907543)**
