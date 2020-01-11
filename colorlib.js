@@ -153,14 +153,19 @@ function createHarmonies(RGB){
     var harmony = new Harmonies([]);
     
     //methods to generate the color harmonies
-    harmony.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
-    harmony.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
-    
-    return harmony;
+    try{
+
+        harmony.addSubPalette(new SubPalette(createComplementaryPalette(RGB)));
+        harmony.addSubPalette(new SubPalette(createTriadicPalette(RGB)));
+        harmony.addSubPalette(new SubPalette(createAnalogousPalette(RGB)));
+        harmony.addSubPalette(new SubPalette(createTetradicPalette(RGB)));
+        harmony.addSubPalette(new SubPalette(createSplitComplementaryPalette(RGB)));
+        harmony.addSubPalette(new SubPalette(createTintShadeMap(RGB)));
+        
+        return harmony;
+    }catch(err){
+        console.log('Could not resolve harmonies');
+    }
 }
 
 function createComplementaryPalette(RGB){
@@ -435,17 +440,21 @@ function createAnalogousPalette(RGB){
 
 }
 function createSplitComplementaryPalette(RGB){
-    
-    var analogous = createAnalogousPalette(RGB);
-    var subPalette = new SubPalette([]);
+    try{
+        var analogous = createAnalogousPalette(RGB);
+        var subPalette = new SubPalette([]);
 
-    //sub-palette is made of the complementary of the analogous colors of RGB
-    subPalette.addSubColor(new SubColor(RGB));
-    subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(1).getRGB()).getSubColor(1));
-    subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(2).getRGB()).getSubColor(1));
+        //sub-palette is made of the complementary of the analogous colors of RGB
+        subPalette.addSubColor(new SubColor(RGB));
+        subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(1).getRGB()).getSubColor(1));
+        subPalette.addSubColor(createComplementaryPalette(analogous.getSubColor(2).getRGB()).getSubColor(1));
 
-    return subPalette;
-    
+        return subPalette;
+    }catch(err){
+
+        console.log('Could not resolve RGB values');
+        
+    }    
     
 }
 
@@ -666,20 +675,27 @@ module.exports = {
     fetchImageLinks:async function(keyword, api_key, srch_eng_id){
         // Holds the URL's to be returned
         var URLS = [];
+        try{
+            // Search request from the custom GSE(Google search engine)
+            var srchRequest = 'https://www.googleapis.com/customsearch/v1?key=' + api_key + '&cx=' + srch_eng_id + '&q=' + keyword + '&searchType=image';
 
-        // Search request from the custom GSE(Google search engine)
-        var srchRequest = 'https://www.googleapis.com/customsearch/v1?key=' + api_key + '&cx=' + srch_eng_id + '&q=' + keyword + '&searchType=image';
+            // Fetches the JSON of the search request asynchronously
+            var fetchResult = await fetch(srchRequest);
+            var jsonResult = await fetchResult.json();
 
-        // Fetches the JSON of the search request asynchronously
-        var fetchResult = await fetch(srchRequest);
-        var jsonResult = await fetchResult.json();
+            // Parse through json items and collects URL's
+            
+            for (var item of jsonResult.items) {
+                
+                URLS.push(item.link);
 
-        // Parse through json items and collects URL's
-        for (var item of jsonResult.items) {
-            URLS.push(item.link);
+            }
+            // Returns an array of image links with 10 links in it
+            return URLS;
+        }catch(err){
+
+            console.log('Could not resolve json');
         }
-        // Returns an array of image links with 10 links in it
-        return URLS;
     },
 
     fetchDominantColorPalette:async function(keyword, imageLinks){
@@ -688,16 +704,22 @@ module.exports = {
 
         // Array of image properties for each image in imageLinks
         var imagePropertiesArray = [];
+        try{
+            for (let link of imageLinks) {
+                // Gets the image properties of the current image link
+                let [imageResult] = await imageClient.imageProperties(link);
 
-        for (let link of imageLinks) {
-            // Gets the image properties of the current image link
-            let [imageResult] = await imageClient.imageProperties(link);
-
-            // Checks if there are valid image properties for the current
-            // image, and if so, adds those properties to the imagePropertiesArray
-            if (imageResult.imagePropertiesAnnotation != null){
-                imagePropertiesArray.push(imageResult);
+                // Checks if there are valid image properties for the current
+                // image, and if so, adds those properties to the imagePropertiesArray
+                if (imageResult.imagePropertiesAnnotation != null){
+                    imagePropertiesArray.push(imageResult);
+                }
             }
+        
+        }catch(err){
+
+
+            console.log('Could not resolve image links');
         }
         // Iterates through the first 7 dominant colors of each image link
         // and adds their RGB 
