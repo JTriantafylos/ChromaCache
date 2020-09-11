@@ -22,7 +22,7 @@
     "express": "^4.16.4",
     "mongo-express": "^0.54.0",
     "mongoose": "^5.7.5",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "eslint": "^5.14.0",
